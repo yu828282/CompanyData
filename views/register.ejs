@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/main.css">
+    <script src="/bootstrap.min.js"></script>
+</head>
+<body>
+    <%-include('header.ejs') %>
+    
+    <div class="main-page">
+        <div> 등록하기 </div>      
+        <form action="/registerProc" method="post" >
+            <ul>          
+                <li> 상호 : <input type="text" name="corp"  required ></li>
+                <li> 설립일 : <input type="date" name="date" required></li>
+                <li> 취임(중임)일 : <input type="date" name="eDate" required></li>
+                <li> 담당자 : <input type="text" name="manager" required></li>
+                <li> 연락처 : <input type="text" name="phone" required ></li>
+                <li> 이메일 : <input type="text" name="email" required></li>
+                <li> 감사여부 : <input type="checkbox" name="auditor" value=1 checked>감사있음</li>
+                <li> 결산일 : <input type="radio" name="closing" value=6 required>6월 <input type="radio" name="closing" value=12 required>12월</li>
+                <li> 이사임기 : <input type="date" name="directorTerm" required ></li>
+                <li> 감사임기 : <input type="date" name="auditorTerm" ></li>
+                <li>메모 : <br>
+                <textarea name="memo" cols="50" rows="10"></textarea></li>
+                <button>제출하기</button>
+            </ul>
+        </form>
+    </div>
+    
+    <%-include('footer.ejs') %>
+    <script>
+        //필드 지정
+        var eDateInput = document.querySelector('input[name="eDate"]');
+        var directorTermInput = document.querySelector('input[name="directorTerm"]');
+        var closingRadio = document.querySelectorAll('input[name="closing"]');
+        var auditorCheckbox = document.querySelector('input[name="auditor"]');
+        var auditorTermInput = document.querySelector('input[name="auditorTerm"]');    
+        
+        eDateInput.addEventListener('change', function() {// 설립일이 변경될 때 이벤트 처리
+            var eDate = new Date(eDateInput.value);            
+            eDate.setFullYear(eDate.getFullYear() + 3); // 이사임기를 설립 후 3년 후로 설정
+            directorTermInput.valueAsDate = eDate;
+        });
+        
+        auditorCheckbox.addEventListener('change', function() {// 감사없는 경우
+            if (!this.checked) {
+            var auditorTermDate = new Date(9999, 11, 32); // 감사 임기는 9999년으로 설정
+            auditorTermInput.valueAsDate = auditorTermDate;
+            }
+        });
+
+        closingRadio.forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                // 만약 선택된 결산일이 12월이라면
+                if (radio.value === '12' && auditorCheckbox.checked) {
+                    var eDate = new Date(eDateInput.value);
+                    var auditorTermDate = new Date(eDate.getFullYear() + 3, 2, 32); // 3년 후의 3월 31일이 감사 임기
+                    auditorTermInput.valueAsDate = auditorTermDate;
+                }
+                // 만약 선택된 결산일이 6월이라면
+                if (radio.value === '6' && auditorCheckbox.checked) {
+                    var eDate = new Date(eDateInput.value);
+                        if (eDate.getMonth() >= 0 && eDate.getMonth() <= 5) {       //1~6월 사이 설립이면 
+                        var auditorTermDate = new Date(eDate.getFullYear() + 2, 8, 31); // 2년 후의 9월 30일이 감사 임기
+                        // 감사임기 입력 필드에 설정
+                        auditorTermInput.valueAsDate = auditorTermDate;
+                        }
+                        if (eDate.getMonth() >= 7 && eDate.getMonth() <= 12) {       //7~12월 사이 설립이면 
+                        var auditorTermDate = new Date(eDate.getFullYear() + 3, 8, 31); // 3년 후의 9월 30일이 감사 임기
+                        // 감사임기 입력 필드에 설정
+                        auditorTermInput.valueAsDate = auditorTermDate;
+                        }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

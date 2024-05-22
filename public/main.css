@@ -1,0 +1,79 @@
+body{
+  overflow-x: hidden;
+}
+
+table{
+  table-layout:fixed;
+  width: 100%;
+}
+footer{
+  margin: 10px 50px;
+}
+#nav1{
+  height: 50px;
+}
+
+#nav1>a {
+    display: block; /* a태그는 글자성격 = inline */
+    float: left;
+    font-size: 30px;
+    font-weight: 900;
+    line-height: 50px;
+    padding: 0 30px;
+    margin-bottom: 5px;
+}
+#nav1>ul {
+  float: right;
+  list-style-type: none;
+  text-decoration: none;
+}
+#nav1>ul li {
+  float: left;
+  padding: 0 20px;
+  line-height: 50px;
+}
+
+#wrap {
+  min-height: 150px;
+  position: relative;
+  width: 100%;
+}
+footer {
+	width: 100%;
+	height: 110px; /* 내용물에 따라 알맞는 값 설정 */
+	bottom: 0px;
+	position: absolute;
+}
+
+.main-page{
+  margin: 30px 10px;
+  padding: 50px 0 50px 0;
+}
+.active{
+  font-weight: 600;
+}
+
+.alertRed {
+  color: red !important;
+}
+
+.closing{
+  min-width: 75px;
+}        
+.detailTable{
+  max-width: 800px;
+  table-layout: auto;
+}
+
+.detailTable th {
+  width: 100px;
+}
+.detailTable th,
+.detailTable td {
+  padding: 2px;
+  text-align: left;
+}
+
+.bottom{
+  align-self: flex-end
+}

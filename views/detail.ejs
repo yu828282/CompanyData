@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/main.css">
+</head>
+<body>
+    <%         
+    const currentPage = 1;
+    const pageSize = 10; 
+    const startIdx = (parseInt(currentPage) - 1)* pageSize;
+    const totalPages = Math.ceil(parseInt(totalComment) / pageSize);
+    const startPage = Math.max(1, parseInt(currentPage) - 2);
+    const endPage = Math.min(totalPages, parseInt(currentPage) + 2);
+    %>  
+    <%-include('header.ejs') %>
+    <div class="main-page">
+        <table class="table detailTable">
+            <thead>
+              <tr>
+                <th scope="col"><%= list[0].corp%></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">id</th>
+                <td><%= list[0].id%></td>
+                <th scope="row">회사명</th>
+                <td><%= list[0].corp%></td>
+              </tr>
+              <tr>
+                <th scope="row">설립일</th>
+                <td><%= formatDate(list[0].date)%></td>
+                <th scope="row">취임일</th>
+                <td><%= formatDate(list[0].eDate)%></td>
+              </tr>
+              <tr>
+                <th scope="row">담당자</th>
+                <td><%= list[0].manager%></td>
+                <th scope="row">연락처</th>
+                <td><%= list[0].phone%></td>
+              </tr>
+              <tr>
+                <th scope="row">이메일</th>
+                <td><%= list[0].email%></td>
+              </tr>
+              <tr>
+                <th scope="row">감사</th>
+                <td><%= list[0].auditor == '1' ? '있음': '없음'%></td>
+                <th scope="row">결산</th>
+                <td><%= list[0].closing%>월</td>
+              </tr>
+              <tr>
+                <th scope="row">이사임기</th>
+                <td class= "<%= isDatePast(formatDate(list[0].directorTerm)) ? 'alertRed' : ''  %> "><%= formatDate(list[0].directorTerm)%></td>
+                <th scope="row">감사임기</th>
+                <td class= "<%= isDatePast(formatDate(list[0].auditorTerm)) ? 'alertRed' : ''  %> "><%= formatDate(list[0].auditorTerm)%></td>
+              </tr>
+              <tr>
+                <th scope="row">비고</th>
+                <td><%= list[0].memo%></td>
+              </tr>
+            </tbody>
+          </table>
+          <div><strong>상담내용</strong>
+            <div class="pb-3 mb-0 small lh-sm border-bottom w-100"></div>
+            <form action="/makeComment?id=<%= list[0].id%>" method="post" class="row gy-2 gx-3 align-items-center">
+                <div class="col-auto bottom"> 상담방법 :
+                    <select class="form-select" name="contact">
+                        <option value="tel">전화</option>
+                        <option value="kakao">카톡</option>
+                        <option value="sms">문자</option>
+                        <option value="email">메일</option>
+                    </select>
+                </div>
+                <div class="col-auto">상담날짜 : <input type="date" name="date" class="form-control" required></div>
+                <div class="col-auto">상담시간 : <input type="time" name="time" class="form-control"></div>
+                <div class="col-auto"> 상담직원 : <input type="text" name="user" class="form-control" placeholder="상담한 직원 이름" required></div>
+                <div class="col-auto"> 제목 : <input type="text" name="title" class="form-control" placeholder="간략한 내용" required></div>                    
+                <div class="col-auto">메모 : <br><textarea name="memo" class="form-control" cols="30" rows="1" placeholder="세부 내용"></textarea></div>
+                <div class="col-auto bottom"><button class="btn btn-outline-secondary">제출</button></div>
+            </form>
+          </div>
+          <% for (let i = startIdx; i < Math.min(startIdx + pageSize, commentLists.length); i++) { 
+            let x = i % pageSize;
+            %>
+            <div><%-commentLists[i].commentId%>&nbsp;<%-commentLists[i].corpid%>&nbsp;<%-commentLists[i].contact%>&nbsp;
+                <%-formatDateString(commentLists[i].date)%><%-commentLists[i].user%>
+                <%-commentLists[i].title%><%-commentLists[i].memo%>
+            </div>
+            <% }
+              %>
+    </div>
+    <%-include('footer.ejs') %>
+</body>
+</html>

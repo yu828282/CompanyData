@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/main.css">
+    <script src="/bootstrap.min.js"></script>
+    <%         
+        const pageSize = 10; 
+        const startIdx = (parseInt(currentPage) - 1)* pageSize;
+        const totalPages = Math.ceil(parseInt(totalCount) / pageSize);
+        const startPage = Math.max(1, parseInt(currentPage) - 2);
+        const endPage = Math.min(totalPages, parseInt(currentPage) + 2);
+    %>
+</head>
+<body>
+    <%-include('header.ejs') %>
+    <div class="main-page">
+        <div class="search d-flex justify-content-end" >
+            <form action="/profile/1" method="get">
+                <div class="input-group mb-3">     
+                    <input type="text" class="form-control" name="searchWord" value="<%= searchWord %>" placeholder="검색어를 입력하세요">
+                    <button id="button-addon2" class="btn btn-outline-secondary" type="submit">검색</button>  
+                </div>
+            </form>     
+        </div>
+        <div>
+             임기만료 예정 : <span class="alertRed"><%- countTermEnd %></span>개
+             / 총 <%- totalCount %>개 회사  
+             <a href="#" id="termHeader">임원임기 통합 정렬</a>
+        </div>
+        <table id="profileTable" class="table table-hover">
+            <thead>
+                <tr class="table-secondary">
+                    <th>No</th>
+                    <th>상호</th>
+                    <th>설립일</th>
+                    <th>취임일</th>
+                    <th>담당자</th>
+                    <th>연락처</th>
+                    <th>이메일</th>
+                    <th>감사</th>
+                    <th>결산</th>
+                    <th><a href="#" id="directorTermHeader">이사임기</a></th>
+                    <th><a href="#" id="auditorTermHeader">감사임기</a></th>
+                    <th>비고</th>
+                    <th>수정</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let i = startIdx; i < Math.min(startIdx + pageSize, lists.length); i++) { 
+                    let x = i % pageSize;
+                %>
+                    <tr>
+                        <td> <%=lists[i].id%> </td>
+                        <td> <a href="/detail/<%=lists[i].id%>"><%=lists[i].corp%></a> </td>
+                        <td> <%=formatDate(lists[i].date)%> </td>
+                        <td> <%=formatDate(lists[i].eDate)%> </td>
+                        <td> <%=lists[i].manager%> </td>
+                        <td> <%=lists[i].phone%> </td>
+                        <td> <%-lists[i].email%> </td>        
+                        <td> <%= lists[i].auditor === 1 ? '○' : ' ' %> </td>
+                        <td> <%=lists[i].closing%> </td>
+                        <td class= "<%= isDatePast(formatDate(lists[i].directorTerm)) ? 'alertRed' : ''  %> "> <%=formatDate(lists[i].directorTerm)%> </td>
+                        <td class= "<%= isDatePast(formatDate(lists[i].auditorTerm)) ? 'alertRed' : ''  %> ">  <%=formatDate(lists[i].auditorTerm)%> </td>
+                        <td> <%=lists[i].memo%> </td>       
+                        <td> <a onclick=toggleDiv(<%=x%>)>수정</a></td>
+                        <td> <a href="/profileDelete?id=<%=lists[i].id%>" onclick="return confirm('정말 삭제할까요?')">삭제</a></td>       
+                    </tr>
+                    <tr class="updateForm" style="display: none;">
+                        <form action="/updateForm?id=<%=lists[i].id%>" method="post">
+                            <td> <%= lists[i].id %> </td>
+                            <td><input type="text" name="corp" value="<%= lists[i].corp %>" required></td>
+                            <td><input type="date" name="date" value="<%= formatDate(lists[i].date) %>"></td>
+                            <td><input class="updateEdate" type="date" name="eDate" value="<%= formatDate(lists[i].eDate) %>" onchange="updateInput(<%=x%>)" required></td>
+                            <td><input type="text" name="manager" value="<%= lists[i].manager %>" required></td>
+                            <td><input type="text" name="phone" value="<%= lists[i].phone %>" required></td>
+                            <td><input type="text" name="email" value="<%= lists[i].email %>" required></td>
+                            <td><input class="updateAuditor" type="checkbox" name="auditor" onchange="updateInput(<%=x%>)"  value="1" <%= lists[i].auditor === 1 ? "checked" : "" %> />감사있음</td>
+                            <td class="closing">
+                                <input class="updateClosingSix" type="radio" name="closing" onchange="updateInput(<%=x%>)" value="6" <%= lists[i].closing === 6 ? "checked" : "" %> required />6
+                                <input class="updateClosingTwelve" type="radio" name="closing" onchange="updateInput(<%=x%>)" value="12" <%= lists[i].closing === 12 ? "checked" : "" %> required />12
+                            </td>
+                            <td><input class="updateDirectorTerm" type="date" name="directorTerm" value="<%= formatDate(lists[i].directorTerm) %>" required /></td>
+                            <td><input class="updateAuditorTerm"  type="date" name="auditorTerm" value="<%= formatDate(lists[i].auditorTerm) %>" /></td>
+                            <td><textarea name="memo"><%= lists[i].memo %></textarea></td>
+                            <td><button type="submit" class="btn btn-outline-secondary">수정</button></td>
+                        </form>
+                    </tr>  
+                <% } %>
+            </tbody>
+        </table>
+        <nav class="d-flex justify-content-center">
+            <ul class="pagination">
+                    <li class="page-item <%= currentPage > 1 ? '' : 'disabled' %> "><a class="page-link" href="/profile/1?term=<%= term %>&searchWord=<%= searchWord %>">처음</a></li>
+                    <li class="page-item <%= currentPage > 1 ? '' : 'disabled' %> "><a class="page-link" href="/profile/<%= currentPage - 1 %>?term=<%= term %>&searchWord=<%= searchWord %>">이전 </a></li>
+                <% for (let i = startPage; i <= endPage; i++) { %>
+                    <li class="page-item <%= i === parseInt(currentPage) ? 'active' : '' %>""><a class="page-link" href="/profile/<%= i %>?term=<%= term %>&searchWord=<%= searchWord %>"><%= i %></a></li>
+                <% } %>
+                    <li class="page-item <%= currentPage < totalPages ? '' : 'disabled' %>"><a class="page-link" href="/profile/<%= parseInt(currentPage) + 1 %>?term=<%= term %>&searchWord=<%= searchWord %>">다음</a></li>
+                    <li class="page-item <%= currentPage < totalPages ? '' : 'disabled' %>"><a class="page-link" href="/profile/<%= totalPages %>?term=<%= term %>&searchWord=<%= searchWord %>">끝</a></li>
+            </ul>
+        </nav>
+        <div class="text-end">
+             06월 결산법인의 감사임기 : 7월~ 9월
+        </div>
+        <div class="text-end">
+             12월 결산법인의 감사임기 : 1월~ 3월
+        </div>
+        <div class="text-end">
+             임기만료 2달 전부터 &nbsp;<span class="alertRed">붉은색</span>으로 표시됩니다.
+        </div>
+    </div>
+    <%-include('footer.ejs') %>
+    <script>        
+        function toggleDiv(num) {            
+            const div = document.getElementsByClassName('updateForm')[num];
+            div.style.display === "none" ? div.style.display = "block" : div.style.display = "none";
+        }
+        function updateInput(num){
+            var eDateInput = document.querySelectorAll('.updateEdate')[num];
+            var auditorCheckbox = document.querySelectorAll('.updateAuditor')[num];
+            var updateClosingSix = document.querySelectorAll('.updateClosingSix')[num];
+            var updateClosingTwelve = document.querySelectorAll('.updateClosingTwelve')[num];
+            var updateDirectorTerm = document.querySelectorAll('.updateDirectorTerm')[num];
+            var updateAuditorTerm = document.querySelectorAll('.updateAuditorTerm')[num];  
+
+            var eDate = new Date(eDateInput.value);            
+            eDate.setFullYear(eDate.getFullYear() + 3); // 이사임기는 설립 후 3년 후로 설정
+            updateDirectorTerm.valueAsDate = eDate;
+
+            if(!auditorCheckbox.checked){
+                var auditorTermDate = new Date(9999, 11, 32); // 감사 임기는 9999년으로 설정
+                updateAuditorTerm.valueAsDate = auditorTermDate;
+            }
+
+            if (updateClosingSix.checked && auditorCheckbox.checked) {
+                    var eDate = new Date(eDateInput.value);
+                    if (eDate.getMonth() >= 0 && eDate.getMonth() <= 5) {       //1~6월 사이 설립이면 
+                        var auditorTermDate = new Date(eDate.getFullYear() + 2, 8, 31); // 2년 후의 9월 30일이 감사 임기
+                        // 감사임기 입력 필드에 설정
+                        updateAuditorTerm.valueAsDate = auditorTermDate;
+                    }
+                    if (eDate.getMonth() >= 7 && eDate.getMonth() <= 12) {       //7~12월 사이 설립이면 
+                        var auditorTermDate = new Date(eDate.getFullYear() + 3, 8, 31); // 3년 후의 9월 30일이 감사 임기
+                        // 감사임기 입력 필드에 설정
+                        updateAuditorTerm.valueAsDate = auditorTermDate;
+                    }
+                }
+            if (updateClosingTwelve.checked && auditorCheckbox.checked) {
+                var eDate = new Date(eDateInput.value);
+                var auditorTermDate = new Date(eDate.getFullYear() + 3, 2, 32); // 3년 후의 3월 31일이 감사 임기
+                updateAuditorTerm.valueAsDate = auditorTermDate;
+            }            
+         }
+         
+         document.getElementById('termHeader').addEventListener('click', (event) => {
+            event.preventDefault();
+            const term = 'term'; // 입력된 검색어 가져오기
+            const queryParams = new URLSearchParams(window.location.search);
+            queryParams.set('term', term);
+            window.location.search = queryParams.toString();
+        });
+         
+         document.getElementById('directorTermHeader').addEventListener('click', (event) => {
+            event.preventDefault();
+            const term = 'director'; // 입력된 검색어 가져오기
+            const queryParams = new URLSearchParams(window.location.search);
+            queryParams.set('term', term);
+            window.location.search = queryParams.toString();
+        });
+         
+         document.getElementById('auditorTermHeader').addEventListener('click', (event) => {
+            event.preventDefault();
+            const term = 'auditor'; // 입력된 검색어 가져오기
+            const queryParams = new URLSearchParams(window.location.search);
+            queryParams.set('term', term);
+            window.location.search = queryParams.toString();
+        });
+    </script>
+</body>
+</html>

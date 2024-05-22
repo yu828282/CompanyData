@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/main.css">
+    <script src="/bootstrap.min.js"></script>
+    <%         
+        const startIdx = (parseInt(currentPage) - 1)* pageSize;
+        const totalPages = Math.ceil(parseInt(totalCount) / pageSize);
+        const startPage = Math.max(1, parseInt(currentPage) - 2);
+        const endPage = Math.min(totalPages, parseInt(currentPage) + 2);
+        let printNumber = 10;
+
+        function formatDate(dateString) {
+            var date = new Date(dateString);
+            var year = date.getFullYear();
+            var month = ('0' + (date.getMonth() + 1)).slice(-2);
+            var day = ('0' + date.getDate()).slice(-2);
+            return year + '-' + month + '-' + day;
+        }
+
+        function isDatePast(dateString) {
+            const inputDate = new Date(dateString); 
+            const today = new Date();
+            const dateLine = new Date(today.getFullYear(), today.getMonth() + 2, today.getDate());
+        
+            inputDate.setHours(0, 0, 0, 0);
+            dateLine.setHours(0, 0, 0, 0);
+        
+            return inputDate < dateLine; 
+        }
+        
+    %>
+</head>
+<body>
+    <%-include('header.ejs') %>
+    <div class="main-page">
+        <div class="d-flex justify-content-end">
+             06월 결산법인의 감사임기 : 7월~ 9월
+             <br>
+             12월 결산법인의 감사임기 : 1월~ 3월
+        </div>
+        <div class="d-flex justify-content-end">
+             임기만료 2달 전부터 &nbsp;<span class="alertRed">붉은색</span>으로 표시됩니다.
+        </div>
+        <div class="search d-flex justify-content-end" >
+        </div>
+        <div> 임기만료 예정 : <%- countTermEnd %>개/ 총 <%- totalCount %>개 회사  
+        </div>
+        <table id="profileTable" class="table table-hover">
+            <thead>
+                <tr class="table-secondary">
+                    <th>No</th>
+                    <th>상호</th>
+                    <th>취임일</th>
+                    <th>담당자</th>
+                    <th>연락처</th>
+                    <th>이메일</th>
+                    <th>감사</th>
+                    <th>이사임기</th>
+                    <th>감사임기</th>
+                    <th>ID</th>
+                    <th>비고</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let i = startIdx; i < lists.length; i++) {  %>
+                    <tr>
+                        <td> <%=i + 1%> </td>
+                        <td> <%=lists[i].corp%> </td>
+                        <td> <%=formatDate(lists[i].eDate)%> </td>
+                        <td> <%=lists[i].manager%> </td>
+                        <td> <%=lists[i].phone%> </td>
+                        <td> <%-lists[i].email%> </td>        
+                        <td> <%= lists[i].auditor === 1 ? '○' : ' ' %> </td>
+                        <td class= "<%= isDatePast(formatDate(lists[i].directorTerm)) ? 'alertRed' : ''  %> "> <%=formatDate(lists[i].directorTerm)%> </td>
+                        <td class= "<%= isDatePast(formatDate(lists[i].auditorTerm)) ? 'alertRed' : ''  %> ">  <%=formatDate(lists[i].auditorTerm)%> </td>
+                        <td> <%=lists[i].id%> </td>
+                        <td> <%=lists[i].memo%> </td>        
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+    <%-include('footer.ejs') %>
+    
+    <script>
+    </script>
+</body>
+</html>
