@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/main.css">
+    <script src="/bootstrap.min.js"></script>
+</head>
+<body>
+    <%-include('header.ejs') %>
+    <div class="main-page">
+        <div class="container">
+            <div class="row">
+              <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                <div class="card card-signin my-5 shadow p-3 mb-5 bg-white rounded">
+                  <div class="card-body py-5">
+                    <h3 class="card-title text-center py-3 fw-semibold">회원정보</h3>
+                    <form class="form-signin" method="post" action="/updateUser?userNO=<%= user.userNO %>">
+                      <div class="d-flex justify-content-end">
+                          <span class="text-danger text-right"> *&nbsp;</span> 필수입력
+                      </div>
+                      <div class="form-floating input-group mb-3">
+                        <input type="text" id="userID" name="userID" class="form-control my-1" maxlength="20" placeholder="" value="<%= user.userID %>" disabled>
+                          <label for="floatingInput">아이디<span style="color:red;"> * </span></label>
+                      </div>
+                      <div class="form-floating">
+                        <input type="password" id="pwd" name="userPassword" class="form-control my-1" placeholder="" value="" disabled>
+                          <label for="floatingInput">비밀번호<span style="color:red;"> * </span></label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <input type="password" id="pwdcheck" name="userPasswordcheck" class="form-control my-1" placeholder="" value="" disabled>
+                          <label for="floatingInput">비밀번호 확인<span style="color:red;"> * </span></label>
+                      </div>
+                      <span id="passwordMatchStatus"></span>
+                      <div class="form-floating">
+                        <input type="text" name="userName" class="form-control my-1" placeholder="" style="ime-mode:active" value="<%= user.userName %>" required>
+                          <label for="floatingInput">이름<span style="color:red;"> * </span></label>
+                      </div>
+                      <div class="form-floating">
+                        <input type="text" name="userPhone" class="form-control my-1" placeholder="" oninput="oninputPhone(this)" value="<%= user.userPhone %>" required>
+                          <label for="floatingInput">연락처 (숫자만 입력)<span style="color:red;"> * </span></label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <input type="text" name="userEmail" class="form-control my-1" placeholder="" style="ime-mode:inactive" value="<%= user.userEmail %>" required>
+                          <label for="floatingInput">이메일<span style="color:red;"> * </span></label>
+                      </div>
+                      <div class="form-floating">
+                        <input type="text" name="userRole" class="form-control my-1" placeholder="" value="<%= user.userRole %>" >
+                          <label for="floatingInput">담당 업무</label>
+                      </div>
+                      <div class="form-floating">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="userAccept" value=0 <%-user.userAccept === 0 ? 'checked' : '' %>  > 
+                            <label class="form-check-label" for="inlineRadio1">관리자 승인대기중</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="userAccept" value=1 <%-user.userAccept === 1 ? 'checked' : '' %>  > 
+                            <label class="form-check-label" for="inlineRadio3">승인됨</label>
+                        </div>
+                      </div>
+                      <hr>	
+                        <div class="d-grid gap-2 ">
+                          <button class="btn btn-primary" type="submit">정보수정</button>
+                          <button class="btn btn-secondary" onclick="location.href='/'" type="button">메인화면으로</button>
+                        </div>
+                          <div class="my-4">
+                          </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>	
+    </div>
+    <%-include('footer.ejs') %>
+	<script>
+
+    const passwordInput = document.getElementById('pwd');
+    const passwordToggle = document.getElementById('password-toggle');
+
+    passwordToggle.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        passwordToggle.textContent = type === 'password' ? '👁️‍🗨️' : '🗨️';
+    });
+    
+
+    const passwordInputCheck = document.getElementById('pwdcheck');
+    const passwordToggleCheck = document.getElementById('password-toggle-check');
+
+    passwordToggleCheck.addEventListener('click', function() {
+        const typecheck = passwordInputCheck.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInputCheck.setAttribute('type', typecheck);
+        passwordToggleCheck.textContent = typecheck === 'password' ? '👁️‍🗨️' : '🗨️';
+    });
+
+    document.getElementById("pwdcheck").addEventListener("keyup", function() {
+        var password = document.getElementById("pwd").value;
+        var passwordCheck = this.value;
+
+        if (password === passwordCheck) {
+            document.getElementById("passwordMatchStatus").style.color = "green";
+            document.getElementById("passwordMatchStatus").innerText = "비밀번호가 일치합니다.";
+        } else {
+            document.getElementById("passwordMatchStatus").style.color = "red";
+            document.getElementById("passwordMatchStatus").innerText = "비밀번호가 일치하지 않습니다.";
+        }
+    });
+
+    function oninputPhone(target) {
+        target.value = target.value
+            .replace(/[^0-9]/g, '')
+            .replace(/(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{3,4})([0-9]{4})/g, "$1-$2-$3");
+	}
+    </script>
+</body>
+</html>

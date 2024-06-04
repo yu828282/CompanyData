@@ -1,10 +1,18 @@
 body{
   overflow-x: hidden;
 }
+.table-responsive {
+  overflow-x: auto;
+}
 
-table{
-  table-layout:fixed;
+#profileTable{
+  table-layout:auto;
   width: 100%;
+  max-width: 2000px;
+  min-width: 300px;
+}
+
+#profileTable th, #profileTable td {
 }
 footer{
   margin: 10px 50px;
@@ -21,6 +29,7 @@ footer{
     line-height: 50px;
     padding: 0 30px;
     margin-bottom: 5px;
+    cursor: pointer;
 }
 #nav1>ul {
   float: right;
@@ -29,7 +38,7 @@ footer{
 }
 #nav1>ul li {
   float: left;
-  padding: 0 20px;
+  padding: 0 10px;
   line-height: 50px;
 }
 
@@ -76,4 +85,38 @@ footer {
 
 .bottom{
   align-self: flex-end
+}
+
+@media (max-width: 767px){
+	.search{
+  width: fit-content;
+  }
+}
+.clickable {
+    cursor: pointer;
+}
+.kakao_icon{
+  width: 30px;
+  display: inline;
+}
+
+.input-small{
+  flex-grow: 0;
+  flex-basis: 100px;
+}
+
+.password-toggle-icon-login{
+    position: absolute;
+    right: 10%;
+    top: 40%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
 }

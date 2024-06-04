@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/main.css">
+    <script src="/bootstrap.min.js"></script>
+</head>
+<body>
+    <%-include('header.ejs') %>
+    <div class="main-page">
+        <div>
+            총 <%- totalCount %>명
+        </div>
+        <table id="profileTable" class="table table-hover">
+            <thead>
+                <tr class="table-secondary">
+                    <th>No</th>
+                    <th>ID</th>
+                    <th>이름</th>
+                    <th>연락처</th>
+                    <th>이메일</th>
+                    <th>담당업무</th>
+                    <th>승인여부</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let i = 0; i < lists.length; i++) {  %>
+                    <tr class="clickable" onclick="handleRowClick(event, '<%=lists[i].userNO%>')">
+                        <td> <%=lists[i].userNO%> </td>
+                        <td> <%=lists[i].userID%> </td>
+                        <td> <%=lists[i].userName%> </td>
+                        <td> <%=lists[i].userPhone%> </td>
+                        <td> <%-lists[i].userEmail%> </td>    
+                        <td> <%-lists[i].userRole%> </td>          
+                        <td> <%= lists[i].userAccept === 1 ? '○' : ' ' %> </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+    <%-include('footer.ejs') %>    
+    <script>        
+        function handleRowClick(event, NO) {
+            const target = event.target;
+            if (target.tagName.toLowerCase() !== 'a') {
+                window.location.href = `/userDetail/${NO}`;
+            }
+        }        
+    </script>
+</body>
+</html>

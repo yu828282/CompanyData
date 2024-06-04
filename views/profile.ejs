@@ -14,85 +14,99 @@
         const startPage = Math.max(1, parseInt(currentPage) - 2);
         const endPage = Math.min(totalPages, parseInt(currentPage) + 2);
     %>
+    <script>        
+        function handleRowClick(event, id) {
+            const target = event.target;
+            if (target.tagName.toLowerCase() !== 'a') {
+                window.location.href = `/detail/${id}`;
+            }
+        }
+        
+    </script>
 </head>
 <body>
     <%-include('header.ejs') %>
     <div class="main-page">
         <div class="search d-flex justify-content-end" >
             <form action="/profile/1" method="get">
-                <div class="input-group mb-3">     
+                <div class="input-group">     
                     <input type="text" class="form-control" name="searchWord" value="<%= searchWord %>" placeholder="검색어를 입력하세요">
                     <button id="button-addon2" class="btn btn-outline-secondary" type="submit">검색</button>  
                 </div>
             </form>     
         </div>
-        <div>
-             임기만료 예정 : <span class="alertRed"><%- countTermEnd %></span>개
-             / 총 <%- totalCount %>개 회사  
-             <a href="#" id="termHeader">임원임기 통합 정렬</a>
-        </div>
-        <table id="profileTable" class="table table-hover">
-            <thead>
-                <tr class="table-secondary">
-                    <th>No</th>
-                    <th>상호</th>
-                    <th>설립일</th>
-                    <th>취임일</th>
-                    <th>담당자</th>
-                    <th>연락처</th>
-                    <th>이메일</th>
-                    <th>감사</th>
-                    <th>결산</th>
-                    <th><a href="#" id="directorTermHeader">이사임기</a></th>
-                    <th><a href="#" id="auditorTermHeader">감사임기</a></th>
-                    <th>비고</th>
-                    <th>수정</th>
-                    <th>삭제</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% for (let i = startIdx; i < Math.min(startIdx + pageSize, lists.length); i++) { 
-                    let x = i % pageSize;
-                %>
-                    <tr>
-                        <td> <%=lists[i].id%> </td>
-                        <td> <a href="/detail/<%=lists[i].id%>"><%=lists[i].corp%></a> </td>
-                        <td> <%=formatDate(lists[i].date)%> </td>
-                        <td> <%=formatDate(lists[i].eDate)%> </td>
-                        <td> <%=lists[i].manager%> </td>
-                        <td> <%=lists[i].phone%> </td>
-                        <td> <%-lists[i].email%> </td>        
-                        <td> <%= lists[i].auditor === 1 ? '○' : ' ' %> </td>
-                        <td> <%=lists[i].closing%> </td>
-                        <td class= "<%= isDatePast(formatDate(lists[i].directorTerm)) ? 'alertRed' : ''  %> "> <%=formatDate(lists[i].directorTerm)%> </td>
-                        <td class= "<%= isDatePast(formatDate(lists[i].auditorTerm)) ? 'alertRed' : ''  %> ">  <%=formatDate(lists[i].auditorTerm)%> </td>
-                        <td> <%=lists[i].memo%> </td>       
-                        <td> <a onclick=toggleDiv(<%=x%>)>수정</a></td>
-                        <td> <a href="/profileDelete?id=<%=lists[i].id%>" onclick="return confirm('정말 삭제할까요?')">삭제</a></td>       
+        <caption>
+            임기만료 예정 : <span class="alertRed"><%- countTermEnd %></span>개
+            / 총 <%- totalCount %>개 회사  
+            <a href="#" id="termHeader">임기 통합정렬</a>
+            <a href="#" id="twoMonthTerm">✉️ 2달</a>
+            <a href="#" id="oneMonthTerm">🗨️ 1달</a>
+            <a href="#" id="twoWeekTerm">📞 2주</a>
+        </caption>
+        <div class="table-responsive d-flex justify-content-center main-table">
+            <table id="profileTable" class="table table-hover table-bordered">
+                <thead>
+                    <tr class="table-secondary">
+                        <th>No</th>
+                        <th>상호</th>
+                        <th>설립일</th>
+                        <th>취임일</th>
+                        <th>담당자</th>
+                        <th>연락처</th>
+                        <th>이메일</th>
+                        <th>감사</th>
+                        <th>결산</th>
+                        <th><a href="#" id="directorTermHeader">이사임기</a></th>
+                        <th><a href="#" id="auditorTermHeader">감사임기</a></th>
+                        <th>비고</th>
+                        <th>수정</th>
+                        <th>삭제</th>
                     </tr>
-                    <tr class="updateForm" style="display: none;">
-                        <form action="/updateForm?id=<%=lists[i].id%>" method="post">
-                            <td> <%= lists[i].id %> </td>
-                            <td><input type="text" name="corp" value="<%= lists[i].corp %>" required></td>
-                            <td><input type="date" name="date" value="<%= formatDate(lists[i].date) %>"></td>
-                            <td><input class="updateEdate" type="date" name="eDate" value="<%= formatDate(lists[i].eDate) %>" onchange="updateInput(<%=x%>)" required></td>
-                            <td><input type="text" name="manager" value="<%= lists[i].manager %>" required></td>
-                            <td><input type="text" name="phone" value="<%= lists[i].phone %>" required></td>
-                            <td><input type="text" name="email" value="<%= lists[i].email %>" required></td>
-                            <td><input class="updateAuditor" type="checkbox" name="auditor" onchange="updateInput(<%=x%>)"  value="1" <%= lists[i].auditor === 1 ? "checked" : "" %> />감사있음</td>
-                            <td class="closing">
-                                <input class="updateClosingSix" type="radio" name="closing" onchange="updateInput(<%=x%>)" value="6" <%= lists[i].closing === 6 ? "checked" : "" %> required />6
-                                <input class="updateClosingTwelve" type="radio" name="closing" onchange="updateInput(<%=x%>)" value="12" <%= lists[i].closing === 12 ? "checked" : "" %> required />12
-                            </td>
-                            <td><input class="updateDirectorTerm" type="date" name="directorTerm" value="<%= formatDate(lists[i].directorTerm) %>" required /></td>
-                            <td><input class="updateAuditorTerm"  type="date" name="auditorTerm" value="<%= formatDate(lists[i].auditorTerm) %>" /></td>
-                            <td><textarea name="memo"><%= lists[i].memo %></textarea></td>
-                            <td><button type="submit" class="btn btn-outline-secondary">수정</button></td>
-                        </form>
-                    </tr>  
-                <% } %>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <% for (let i = startIdx; i < Math.min(startIdx + pageSize, lists.length); i++) { 
+                        let x = i % pageSize;
+                    %>
+                        <tr class="clickable" onclick="handleRowClick(event, '<%=lists[i].id%>')">
+                            <td> <%=lists[i].id%> </td>
+                            <td> <a href="/detail/<%=lists[i].id%>"><%=lists[i].corp%></a> </td>
+                            <td> <%=formatDate(lists[i].date)%> </td>
+                            <td> <%=formatDate(lists[i].eDate)%> </td>
+                            <td> <%=lists[i].manager%> </td>
+                            <td> <%=lists[i].phone%> </td>
+                            <td> <%-lists[i].email%> </td>        
+                            <td> <%= lists[i].auditor === 1 ? '○' : ' ' %> </td>
+                            <td> <%=lists[i].closing%> </td>
+                            <td class= "<%= isDatePastTwoMonth(formatDate(lists[i].directorTerm)) ? 'alertRed' : ''  %> "><%=formatDate(lists[i].directorTerm)%> </td>
+                            <td class= "<%= isDatePastTwoMonth(formatDate(lists[i].auditorTerm)) ? 'alertRed' : ''  %> "><%=formatDate(lists[i].auditorTerm)%> </td>
+                            <td> <%=lists[i].memo%> </td>       
+                            <td> <a onclick=toggleDiv(<%=x%>)>수정</a></td>
+                            <td> <a href="/profileDelete?id=<%=lists[i].id%>" onclick="return confirm('정말 삭제할까요?')">삭제</a></td>       
+                        </tr>
+                        <tr class="updateForm" style="display: none;">
+                            <form action="/updateForm?id=<%=lists[i].id%>" method="post">
+                                <td> <%= lists[i].id %> </td>
+                                <td><input class="form-control" type="text" name="corp" value="<%= lists[i].corp %>" required></td>
+                                <td><input class="form-control" type="date" name="date" value="<%= formatDate(lists[i].date) %>"></td>
+                                <td><input class="form-control updateEdate" type="date" name="eDate" value="<%= formatDate(lists[i].eDate) %>" onchange="updateInput(<%=x%>)" required></td>
+                                <td><input class="form-control" type="text" name="manager" value="<%= lists[i].manager %>" required></td>
+                                <td><input class="form-control" type="text" name="phone" value="<%= lists[i].phone %>" required></td>
+                                <td><input class="form-control" type="text" name="email" value="<%= lists[i].email %>" required></td>
+                                <td><input class="form-check-input updateAuditor" type="checkbox" name="auditor" onchange="updateInput(<%=x%>)"  value="1" <%= lists[i].auditor === 1 ? "checked" : "" %> />감사있음</td>
+                                <td class="closing">
+                                    <input class="form-check-input updateClosingSix" type="radio" name="closing" onchange="updateInput(<%=x%>)" value="6" <%= lists[i].closing === 6 ? "checked" : "" %> required />6
+                                    <input class="form-check-input updateClosingTwelve" type="radio" name="closing" onchange="updateInput(<%=x%>)" value="12" <%= lists[i].closing === 12 ? "checked" : "" %> required />12
+                                </td>
+                                <td><input class="updateDirectorTerm" type="date" name="directorTerm" value="<%= formatDate(lists[i].directorTerm) %>" required /></td>
+                                <td><input class="updateAuditorTerm"  type="date" name="auditorTerm" value="<%= formatDate(lists[i].auditorTerm) %>" /></td>
+                                <td><textarea name="memo" class="form-control"><%= lists[i].memo %></textarea></td>
+                                <td colspan="2"><button type="submit" class="btn btn-outline-secondary">수정</button></td>
+                            </form>
+                        </tr>  
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
         <nav class="d-flex justify-content-center">
             <ul class="pagination">
                     <li class="page-item <%= currentPage > 1 ? '' : 'disabled' %> "><a class="page-link" href="/profile/1?term=<%= term %>&searchWord=<%= searchWord %>">처음</a></li>
@@ -118,7 +132,7 @@
     <script>        
         function toggleDiv(num) {            
             const div = document.getElementsByClassName('updateForm')[num];
-            div.style.display === "none" ? div.style.display = "block" : div.style.display = "none";
+            div.style.display === "none" ? div.style.display = "table-row" : div.style.display = "none";
         }
         function updateInput(num){
             var eDateInput = document.querySelectorAll('.updateEdate')[num];
@@ -167,7 +181,7 @@
          
          document.getElementById('directorTermHeader').addEventListener('click', (event) => {
             event.preventDefault();
-            const term = 'director'; // 입력된 검색어 가져오기
+            const term = 'director'; 
             const queryParams = new URLSearchParams(window.location.search);
             queryParams.set('term', term);
             window.location.search = queryParams.toString();
@@ -175,7 +189,31 @@
          
          document.getElementById('auditorTermHeader').addEventListener('click', (event) => {
             event.preventDefault();
-            const term = 'auditor'; // 입력된 검색어 가져오기
+            const term = 'auditor'; 
+            const queryParams = new URLSearchParams(window.location.search);
+            queryParams.set('term', term);
+            window.location.search = queryParams.toString();
+        });
+         
+         document.getElementById('twoMonthTerm').addEventListener('click', (event) => {
+            event.preventDefault();
+            const term = 'twoMonth'; 
+            const queryParams = new URLSearchParams(window.location.search);
+            queryParams.set('term', term);
+            window.location.search = queryParams.toString();
+        });
+         
+         document.getElementById('oneMonthTerm').addEventListener('click', (event) => {
+            event.preventDefault();
+            const term = 'oneMonth';
+            const queryParams = new URLSearchParams(window.location.search);
+            queryParams.set('term', term);
+            window.location.search = queryParams.toString();
+        });
+         
+         document.getElementById('twoWeekTerm').addEventListener('click', (event) => {
+            event.preventDefault();
+            const term = 'twoWeek'; 
             const queryParams = new URLSearchParams(window.location.search);
             queryParams.set('term', term);
             window.location.search = queryParams.toString();

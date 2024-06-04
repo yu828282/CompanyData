@@ -8,10 +8,43 @@ function formatDate(dateString) {
     return year + '-' + month + '-' + day;
 }
 
-function isDatePast(dateString) {
+function isDatePastTwoMonth(dateString) {
     const inputDate = new Date(dateString); 
     const today = new Date();
     const dateLine = new Date(today.getFullYear(), today.getMonth() + 2, today.getDate());
+
+    inputDate.setHours(0, 0, 0, 0);
+    dateLine.setHours(0, 0, 0, 0);
+
+    return inputDate < dateLine; 
+}
+
+function isDatePastOneMonth(dateString) {
+    const inputDate = new Date(dateString); 
+    const today = new Date();
+    const dateLine = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
+
+    inputDate.setHours(0, 0, 0, 0);
+    dateLine.setHours(0, 0, 0, 0);
+
+    return inputDate < dateLine; 
+}
+
+function isDatePastTwoWeek(dateString) {
+    const inputDate = new Date(dateString); 
+    const today = new Date();
+    const dateLine = new Date(today.getFullYear(), today.getMonth(), today.getDate()+20);
+
+    inputDate.setHours(0, 0, 0, 0);
+    dateLine.setHours(0, 0, 0, 0);
+
+    return inputDate < dateLine; 
+}
+
+function isDatePast(dateString) {
+    const inputDate = new Date(dateString); 
+    const today = new Date();
+    const dateLine = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
     inputDate.setHours(0, 0, 0, 0);
     dateLine.setHours(0, 0, 0, 0);
@@ -38,8 +71,19 @@ function formatDateString(dateString) {
     return `${year}-${month}-${day} (${period}) ${hours}시 ${minutes}분`;
   }
 
+  function findTime(dateString) {
+    const date = new Date(dateString);
+    const hours = String(date.getHours()).padStart(2, '0'); // 시간은 두 자리로 포맷
+    const minutes = String(date.getMinutes()).padStart(2, '0'); // 분은 두 자리로 포맷
+    return `${hours}:${minutes}`;
+  }
+
 module.exports = {
   formatDate,
-  isDatePast,
+  isDatePastTwoMonth,
+  isDatePastOneMonth,
+  isDatePastTwoWeek,
   formatDateString,
+  findTime,
+  isDatePast,
 };

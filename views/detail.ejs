@@ -6,22 +6,39 @@
     <title>Document</title>
     <link rel="stylesheet" href="/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/main.css">
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
 </head>
 <body>
+  <script>    
+    Kakao.init('2008a212248e102d2bfe8b0a90121f85'); // 카카오앱키 보안필요
+    Kakao.isInitialized();
+  </script>
     <%         
-    const currentPage = 1;
     const pageSize = 10; 
     const startIdx = (parseInt(currentPage) - 1)* pageSize;
-    const totalPages = Math.ceil(parseInt(totalComment) / pageSize);
+    const totalPages = Math.ceil(parseInt(totalCount[0].totalCount) / pageSize);
     const startPage = Math.max(1, parseInt(currentPage) - 2);
     const endPage = Math.min(totalPages, parseInt(currentPage) + 2);
+
+    function dateTime(dateString) {
+      const date = new Date(dateString);
+      const hours = String(date.getHours()).padStart(2, '0'); // 시간은 두 자리로 포맷
+      const minutes = String(date.getMinutes()).padStart(2, '0'); // 분은 두 자리로 포맷
+      return `${hours}:${minutes}`;
+    }
+
     %>  
     <%-include('header.ejs') %>
     <div class="main-page">
         <table class="table detailTable">
             <thead>
               <tr>
-                <th scope="col"><%= list[0].corp%></th>
+                <td colspan="4" class="fs-3 fw-bold">
+                  <%= list[0].corp%>                     
+                  <a id="kakaotalk-sharing-btn"href="javascript:;">
+                    <img src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png" class="kakao_icon" alt="카카오톡 공유 보내기 버튼" />
+                  </a>
+                </td>
               </tr>
             </thead>
             <tbody>
@@ -55,45 +72,120 @@
               </tr>
               <tr>
                 <th scope="row">이사임기</th>
-                <td class= "<%= isDatePast(formatDate(list[0].directorTerm)) ? 'alertRed' : ''  %> "><%= formatDate(list[0].directorTerm)%></td>
+                <td class= "<%= isDatePastTwoMonth(formatDate(list[0].directorTerm)) ? 'alertRed' : ''  %> ">
+                  <%= formatDate(list[0].directorTerm)%>
+                  <%= isDatePastTwoWeek(list[0].directorTerm) ? '(20일도 안 남았어요😢)' : isDatePastOneMonth(list[0].directorTerm) ? '(한달 후 만료)' : isDatePastTwoMonth(list[0].directorTerm) ? '(두달 후 만료)' :'' %>
+                </td>
                 <th scope="row">감사임기</th>
-                <td class= "<%= isDatePast(formatDate(list[0].auditorTerm)) ? 'alertRed' : ''  %> "><%= formatDate(list[0].auditorTerm)%></td>
+                <td class= "<%= isDatePastTwoMonth(formatDate(list[0].auditorTerm)) ? 'alertRed' : ''  %> ">
+                  <%= formatDate(list[0].auditorTerm)%>
+                  <%= isDatePastTwoWeek(list[0].auditorTerm) ? '(20일도 안 남았어요😢)' : isDatePastOneMonth(list[0].auditorTerm) ? '(한달 후 만료)' : isDatePastTwoMonth(list[0].auditorTerm) ? '(두달 후 만료)' :'' %>
+                </td>
               </tr>
               <tr>
                 <th scope="row">비고</th>
-                <td><%= list[0].memo%></td>
+                <td><%= list[0].memo ? list[0].memo.replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>") : ''%></td>
               </tr>
             </tbody>
           </table>
-          <div><strong>상담내용</strong>
-            <div class="pb-3 mb-0 small lh-sm border-bottom w-100"></div>
+          <div class="my-3"><strong>상담작성</strong>
+            <div class="pb-2 mb-1 small lh-sm border-bottom"></div>
             <form action="/makeComment?id=<%= list[0].id%>" method="post" class="row gy-2 gx-3 align-items-center">
-                <div class="col-auto bottom"> 상담방법 :
-                    <select class="form-select" name="contact">
-                        <option value="tel">전화</option>
-                        <option value="kakao">카톡</option>
-                        <option value="sms">문자</option>
-                        <option value="email">메일</option>
-                    </select>
-                </div>
+                <div class="col-auto bottom input-small"> 상담방법 : <input type="text" name="contact" class="form-control" required></div>
                 <div class="col-auto">상담날짜 : <input type="date" name="date" class="form-control" required></div>
                 <div class="col-auto">상담시간 : <input type="time" name="time" class="form-control"></div>
-                <div class="col-auto"> 상담직원 : <input type="text" name="user" class="form-control" placeholder="상담한 직원 이름" required></div>
+                <div class="col-auto"> 상담직원 : <input type="text" name="user" class="form-control" placeholder="상담한 직원 이름" value="<%= locals.userName%>" required></div>
                 <div class="col-auto"> 제목 : <input type="text" name="title" class="form-control" placeholder="간략한 내용" required></div>                    
                 <div class="col-auto">메모 : <br><textarea name="memo" class="form-control" cols="30" rows="1" placeholder="세부 내용"></textarea></div>
                 <div class="col-auto bottom"><button class="btn btn-outline-secondary">제출</button></div>
             </form>
           </div>
+          <strong>상담기록</strong>
+          <div class="pb-2 mb-1 small lh-sm border-bottom"></div>
+
           <% for (let i = startIdx; i < Math.min(startIdx + pageSize, commentLists.length); i++) { 
             let x = i % pageSize;
             %>
-            <div><%-commentLists[i].commentId%>&nbsp;<%-commentLists[i].corpid%>&nbsp;<%-commentLists[i].contact%>&nbsp;
-                <%-formatDateString(commentLists[i].date)%><%-commentLists[i].user%>
-                <%-commentLists[i].title%><%-commentLists[i].memo%>
+            <div class="row gy-2 gx-3 align-items-center d-flex align-items-center">
+                    <!-- 
+                    <select class="form-select" name="contact" readonly>
+                      <option selected><%-commentLists[i].contact%> </option>
+                        <option value="tel">전화</option>
+                        <option value="kakao">카톡</option>
+                        <option value="sms">문자</option>
+                        <option value="email">메일</option>
+                    </select> -->
+                    <!-- <input type="text" name="contact" class="form-control" value="<%-commentLists[i].contact%>" readonly> -->
+              <div class="col-auto input-small"><input type="text" name="contact" class="form-control" value="<%-commentLists[i].contact%>" required></div>
+              <div class="col-auto"><input type="date" name="date" class="form-control" value="<%-formatDate(commentLists[i].date)%>" readonly></div>
+              <div class="col-auto"><input type="time" name="time" class="form-control" value="<%-dateTime(commentLists[i].date)%>" readonly></div>
+              <div class="col-auto input-small"><input type="text" name="user" class="form-control" placeholder="상담한 직원 이름" value="<%-commentLists[i].user%>" readonly></div>
+              <div class="col-auto"><input type="text" name="title" class="form-control" placeholder="간략한 내용" value="<%-commentLists[i].title%>"  readonly></div>                    
+              <div class="col-auto"><textarea name="memo" class="form-control" cols="30" rows="1" placeholder="세부 내용" readonly><%-commentLists[i].memo%></textarea></div>
+              <div class="col-auto bottom"><a onclick=toggleDiv(<%=x%>)>수정</a></div>
+              <div class="col-auto bottom"><a href='/commentDelete?id=<%= commentLists[i].commentId %>&corpid=<%=id%>' onclick="return confirm('정말 삭제할까요?')">삭제</a></div>
+            </div>
+            <div class="updateForm" style="display: none;">
+              <form action="/updateComment?id=<%= commentLists[i].commentId%>&corpid=<%=id%>" method="post" class="row gy-2 gx-3 align-items-center">
+                  <div class="col-auto bottom input-small"> 상담방법 :
+                      <!-- <select class="form-select" name="contact">
+                        <option selected><%-commentLists[i].contact%> </option>
+                          <option value="전화">전화</option>
+                          <option value="카톡">카톡</option>
+                          <option value="문자">문자</option>
+                          <option value="메일">메일</option>
+                      </select> -->
+                      <input type="text" name="contact" class="form-control" value="<%-commentLists[i].contact%>" required>
+                  </div>
+                  <div class="col-auto">상담날짜 : <input type="date" name="date" class="form-control" value="<%-formatDate(commentLists[i].date)%>" required></div>
+                  <div class="col-auto">상담시간 : <input type="time" name="time" class="form-control" value="<%-dateTime(commentLists[i].date)%>"></div>
+                  <div class="col-auto input-small"> 상담직원 : <input type="text" name="user" class="form-control" placeholder="상담한 직원 이름" value="<%-commentLists[i].user%>" required></div>
+                  <div class="col-auto"> 제목 : <input type="text" name="title" class="form-control" placeholder="간략한 내용" value="<%-commentLists[i].title%>" required></div>                    
+                  <div class="col-auto">메모 : <br><textarea name="memo" class="form-control" cols="30" rows="1" placeholder="세부 내용"><%-commentLists[i].memo%></textarea></div>
+                  <div class="col-auto bottom"><button class="btn btn-outline-secondary">제출</button></div>
+              </form>
+              <div class="mb-3"></div>
             </div>
             <% }
-              %>
+              %>              
+        <nav class="d-flex justify-content-center p-3">
+          <ul class="pagination">
+                  <li class="page-item <%= currentPage > 1 ? '' : 'disabled' %> "><a class="page-link" href="/detail/<%-id%>?currentPage=1">처음</a></li>
+                  <li class="page-item <%= currentPage > 1 ? '' : 'disabled' %> "><a class="page-link" href="/detail/<%-id%>?currentPage=<%- (parseInt(currentPage) - 1) %>">이전 </a></li>
+              <% for (let i = startPage; i <= endPage; i++) { %>
+                  <li class="page-item <%= i === parseInt(currentPage) ? 'active' : '' %>""><a class="page-link" href="/detail/<%-id%>?currentPage=<%= i %>"><%= i %></a></li>
+              <% } %>
+                  <li class="page-item <%= currentPage < totalPages ? '' : 'disabled' %>"><a class="page-link" href="/detail/<%-id%>?currentPage=<%- (parseInt(currentPage) + 1) %>">다음</a></li>
+                  <li class="page-item <%= currentPage < totalPages ? '' : 'disabled' %>"><a class="page-link" href="/detail/<%-id%>?currentPage=<%- parseInt(totalPages) %>">끝</a></li>
+          </ul>
+      </nav>
+      <div class="d-flex justify-content-end px-1">
+        <button class="btn btn-outline-secondary ">목록으로 돌아가기</button>
+      </div>
     </div>
     <%-include('footer.ejs') %>
+    <script>       
+       function toggleDiv(num) {            
+            const div = document.getElementsByClassName('updateForm')[num];
+            div.style.display === "none" ? div.style.display = "table-row" : div.style.display = "none";
+        }
+        
+        let auditorTerm = '';
+        if(`<%= list[0].auditor %>` == '1'){
+          auditorTerm = '감사임기 만료일 : <%= formatDate(list[0].auditorTerm)%>';
+        }
+
+      Kakao.Share.createDefaultButton({
+        container: '#kakaotalk-sharing-btn',
+        objectType: 'text',
+        text:
+          `안녕하세요, 해피브릿지 입니다. <%= list[0].corp%>의 임기만료 안내차 연락드렸습니다. 이사임기 만료일 : <%= formatDate(list[0].directorTerm)%> ${auditorTerm} 임기연장 문의사항은 하단 링크를 통해 연락주세요.`,
+        link: {
+          // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
+          mobileWebUrl: 'https://www.happy-bridge.kr/',
+          webUrl: 'https://www.happy-bridge.kr/',
+        },
+      });
+    </script>
 </body>
 </html>
