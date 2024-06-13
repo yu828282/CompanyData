@@ -42,7 +42,7 @@
                     <div class="mb-3 row">
                         <label for="phone" class="col-sm-2 col-form-label">연락처</label>
                         <div class="col-sm-10">
-                            <input type="text" name="phone" class="form-control" id="phone" required>
+                            <input type="text" name="phone" class="form-control" id="phone" oninput="oninputPhone(this)" required>
                         </div>
                     </div>
                     <div class="mb-3 row">
@@ -115,6 +115,13 @@
     
     <%-include('footer.ejs') %>
     <script>
+
+        function oninputPhone(target) {
+            target.value = target.value
+                .replace(/[^0-9]/g, '')
+                .replace(/(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{3,4})([0-9]{4})/g, "$1-$2-$3");
+        }
+      
         //필드 지정
         var dateInput = document.querySelector('input[name="date"]');
         var eDateInput = document.querySelector('input[name="eDate"]');

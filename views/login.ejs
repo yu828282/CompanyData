@@ -19,14 +19,14 @@
                     <h3 class="card-title text-center py-3 fw-semibold">로그인 하기</h3>
                     <form class="form-signin" method="post" action="/loginProc">
                         <div class="form-label-group">
-                        <input type="text" id="id" name="userId" class="form-control my-1" maxlength="20" placeholder="아이디를 입력해주세요" value="<%- cookie%>" required autofocus>
+                        <input type="text" id="id" name="userId" class="form-control my-1" maxlength="20" placeholder="아이디를 입력해주세요" value="<%= cookie %>" required autofocus>
                         </div>
                         <div class="form-label-group">
                         <input type="password" id="pwd" name="userPassword" class="form-control my-1" placeholder="비밀번호를 입력해주세요" required>
                             <span id="password-toggle" class="password-toggle-icon-login">👁️‍🗨️</span>
                         </div>
-                        <div class="form-label-group">
-                            <input class="form-check-input" type="checkbox" value="rememberId" id="remember" name="rememberId">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="remember" id="remember" name="rememberId">
                             <label class="form-check-label" for="remember">ID 저장하기</label>
                         </div>
                         <hr>	
@@ -35,9 +35,9 @@
                             <button class="btn btn-secondary" onclick="location.href='/join'" type="button">회원가입 하기</button>
                         </div>
                             <div class="my-4 form-check">
-                                <a href="#" class="float-end">비밀번호 찾기</a>
+                                <a href="/findPassword" class="float-end">비밀번호 찾기</a>
                                 <span class="float-end">,&nbsp;또는&nbsp;</span>
-                                <a href="#" class="float-end">아이디 찾기</a>
+                                <a href="/findID" class="float-end">아이디 찾기</a>
                             </div>
                     </form>
                     </div>

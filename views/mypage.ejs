@@ -48,9 +48,15 @@
                         <input type="text" name="userEmail" class="form-control my-1" placeholder="" style="ime-mode:inactive" value="<%= user.userEmail %>" required>
                           <label for="floatingInput">이메일<span style="color:red;"> * </span></label>
                       </div>
-                      <div class="form-floating">
-                        <input type="text" name="userRole" class="form-control my-1" placeholder="" value="<%= user.userRole %>" >
-                          <label for="floatingInput">담당 업무</label>
+                      <div class="form-floating mb-3">
+                        <select class="form-select" id="floatingSelect"  name="userRole" <%-user.userRole === 'admin' ? '' : 'disabled' %> > 
+                          <option selected><%-user.userRole%></option>
+                          <option value="admin">관리자</option>
+                          <option value="영업 담당">영업담당</option>
+                          <option value="등기 담당">등기담당</option>
+                          <option value="그 외">그 외</option>
+                        </select>
+                        <label for="floatingSelect">담당업무</label>
                       </div>
                       <div class="form-floating">
                         <div class="form-check form-check-inline">
@@ -66,6 +72,7 @@
                         <div class="d-grid gap-2 ">
                           <button class="btn btn-primary" type="submit">정보수정</button>
                           <button class="btn btn-secondary" onclick="location.href='/'" type="button">메인화면으로</button>
+                          <button class="btn btn-outline-secondary" onclick="if(confirm('정말 삭제할까요?')) { location.href='/userDelete/<%= user.userNO %>'; }" type="button">회원탈퇴</button>
                         </div>
                           <div class="my-4">
                           </div>

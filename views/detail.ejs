@@ -10,7 +10,7 @@
 </head>
 <body>
   <script>    
-    Kakao.init('2008a212248e102d2bfe8b0a90121f85'); // 카카오앱키 보안필요
+    Kakao.init('2008a212248e102d2bfe8b0a90121f85'); 
     Kakao.isInitialized();
   </script>
     <%         
@@ -107,15 +107,6 @@
             let x = i % pageSize;
             %>
             <div class="row gy-2 gx-3 align-items-center d-flex align-items-center">
-                    <!-- 
-                    <select class="form-select" name="contact" readonly>
-                      <option selected><%-commentLists[i].contact%> </option>
-                        <option value="tel">전화</option>
-                        <option value="kakao">카톡</option>
-                        <option value="sms">문자</option>
-                        <option value="email">메일</option>
-                    </select> -->
-                    <!-- <input type="text" name="contact" class="form-control" value="<%-commentLists[i].contact%>" readonly> -->
               <div class="col-auto input-small"><input type="text" name="contact" class="form-control" value="<%-commentLists[i].contact%>" required></div>
               <div class="col-auto"><input type="date" name="date" class="form-control" value="<%-formatDate(commentLists[i].date)%>" readonly></div>
               <div class="col-auto"><input type="time" name="time" class="form-control" value="<%-dateTime(commentLists[i].date)%>" readonly></div>
@@ -128,13 +119,6 @@
             <div class="updateForm" style="display: none;">
               <form action="/updateComment?id=<%= commentLists[i].commentId%>&corpid=<%=id%>" method="post" class="row gy-2 gx-3 align-items-center">
                   <div class="col-auto bottom input-small"> 상담방법 :
-                      <!-- <select class="form-select" name="contact">
-                        <option selected><%-commentLists[i].contact%> </option>
-                          <option value="전화">전화</option>
-                          <option value="카톡">카톡</option>
-                          <option value="문자">문자</option>
-                          <option value="메일">메일</option>
-                      </select> -->
                       <input type="text" name="contact" class="form-control" value="<%-commentLists[i].contact%>" required>
                   </div>
                   <div class="col-auto">상담날짜 : <input type="date" name="date" class="form-control" value="<%-formatDate(commentLists[i].date)%>" required></div>
@@ -182,8 +166,8 @@
           `안녕하세요, 해피브릿지 입니다. <%= list[0].corp%>의 임기만료 안내차 연락드렸습니다. 이사임기 만료일 : <%= formatDate(list[0].directorTerm)%> ${auditorTerm} 임기연장 문의사항은 하단 링크를 통해 연락주세요.`,
         link: {
           // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
-          mobileWebUrl: 'https://www.happy-bridge.kr/',
-          webUrl: 'https://www.happy-bridge.kr/',
+          mobileWebUrl: 'http://localhost:3000/',
+          webUrl: 'http://localhost:3000/',
         },
       });
     </script>

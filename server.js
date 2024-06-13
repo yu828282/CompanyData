@@ -7,14 +7,16 @@ const session = require('express-session')
 const path = require('path')
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const saltRounds = 10;
 const { formatDate } = require('./util');
 const { isDatePastTwoWeek,isDatePastTwoMonth,isDatePastOneMonth,isDatePast } = require('./util');
 const { formatDateString } = require('./util');
 const { findTime } = require('./util');
+const nodemailer = require('nodemailer');
 
 const cookieParser = require('cookie-parser');
-app.use(cookieParser());
+app.use(cookieParser()); // cookie-parser 미들웨어 설정
 
 require('dotenv').config();
 
@@ -31,6 +33,15 @@ connection.connect((error) => {
     throw error;
   }
   console.log('MySQL 연결 성공!');
+});
+
+// Nodemailer 설정
+const transporter = nodemailer.createTransport({
+  service: process.env.EMAIL,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD
+  }
 });
  
 // connection.query('SELECT * FROM test.test_table', function (error, results, fields) {
@@ -104,14 +115,14 @@ app.get('/', function (req,res) {
 });
 
 app.get('/login', function (req,res) {
-  const rememberedId = req.cookies.rememberedId || '';
-  res.render('login',{cookie:rememberedId})
+  const rememberId = req.cookies.rememberId || '';
+  res.render('login',{cookie:rememberId})
   }
 )
 
 app.post('/loginProc', (req, res) => {
-  const id  = req.body.userId ; 
-  const pw = req.body.userPassword; 
+  const id  = req.body.userId.trim(); 
+  const pw = req.body.userPassword.trim(); 
   const rememberId = req.body.rememberId;
 
   const sql = 'SELECT * FROM user WHERE `userID` = ?'      
@@ -121,25 +132,24 @@ app.post('/loginProc', (req, res) => {
       if(err) throw err; 
 
       if(result.length === 0) {
-      res.send("<script>alert('아이디를 확인해주세요'); location.href='/login';</script>");
+      res.send("<script>alert('아이디를 확인해주세요'); history.go(-1);</script>");
     } else {
       const user = result[0];
       // 비밀번호 비교
       bcrypt.compare(pw, user.userPW, (err, isMatch) => {
         if (err) {
           console.error('비밀번호 비교 오류:', err);
-          res.send("<script>alert('서버 오류. 다시 시도해주세요.'); location.href='/login';</script>");
+          res.send("<script>alert('서버 오류. 다시 시도해주세요.'); history.go(-1);</script>");
           return;
         }
         if (!isMatch) {
-          res.send("<script>alert('비밀번호를 확인해주세요'); location.href='/login';</script>");
+          res.send("<script>alert('비밀번호를 확인해주세요'); history.go(-1);</script>");
         } else {
           if (rememberId) {
-            res.cookie('rememberedId', id, { maxAge: 14 * 24 * 60 * 60 * 1000, httpOnly: true });
+            res.cookie('rememberId', id, { maxAge: 14 * 24 * 60 * 60 * 1000, httpOnly: true });
           } else {
-            res.clearCookie('rememberedId');
+            res.clearCookie('rememberId');
           }
-
           req.session.user = user;
           res.send("<script>alert('로그인 완료'); location.href='/';</script>");
         }
@@ -153,10 +163,102 @@ app.get('/logout', (req, res) => {
     res.send("<script>alert('로그아웃 되었습니다.'); location.href='/';</script>");
   });
 
-app.get('/join', function (req,res) {
-      res.render('join')
+app.post('/findIDProc', (req, res) => {
+  const userPhone = req.body.userPhone;
+  const sql = 'SELECT userID FROM user WHERE userPhone = ?';
+
+  connection.query(sql, [userPhone], (err, results) => {
+    if (err) {
+      throw err;
+    }  
+    if (results.length > 0) {
+      res.send(`아이디는 : ${results[0].userID} 입니다.`);
+    } else {
+      res.send('해당하는 아이디가 없습니다.');
     }
-  )
+  });
+});
+
+app.get('/findID', function (req,res) {
+  res.render('findID')
+  }
+);
+// 임시 비밀번호 생성 함수
+function generateTempPassword() {
+  return crypto.randomBytes(8).toString('hex'); // 16자리 임시 비밀번호 생성
+}
+
+// 비밀번호 찾기 폼 렌더링
+app.get('/findPassword', (req, res) => {
+  res.render('findPassword');
+});
+
+// 비밀번호 찾기 처리
+app.post('/findPassword', (req, res) => {
+  const userID = req.body.userID.trim();
+  const userEmail = req.body.userEmail.trim();
+
+  const sql = 'SELECT * FROM user WHERE userID = ? AND userEmail = ?';
+
+  connection.query(sql, [userID, userEmail], (err, results) => {
+    if (err) {
+      return res.status(500).send('Database query error');
+    }
+    if (results.length > 0) {
+      const tempPassword = generateTempPassword();
+      const saltRounds = 10;
+
+      bcrypt.hash(tempPassword, saltRounds, (err, hashedPassword) => {
+        if (err) {
+          return res.status(500).send('Failed to hash password');
+        }
+
+        const updateSql = 'UPDATE user SET userPW = ? WHERE userID = ?';
+        connection.query(updateSql, [hashedPassword, userID], (err, updateResult) => {
+          if (err) {
+            return res.status(500).send('Failed to update password');
+          }
+
+          const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: userEmail,
+            subject: '임시 비밀번호 발송',
+            text: `${userID}님의 임시 비밀번호는 ${tempPassword} 입니다. 로그인 후 반드시 비밀번호를 변경해주세요.`
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              return res.status(500).send('Failed to send email');
+            }
+            res.send("<script>alert('임시 비밀번호가 이메일로 발송되었습니다.'); location.href='/login';</script>");
+          });
+        });
+      });
+    } else {
+      res.send("<script>alert('해당하는 사용자가 없습니다.'); history.go(-1);</script>");
+    }
+  });
+});
+
+  app.get('/join', function (req, res) {
+    const sql = 'SELECT COUNT(*) AS totalUsers FROM user';
+    let adminMessage = "";
+    let adminID = "";
+  
+    connection.query(sql, (err, result) => {
+      if (err) {
+        throw err;
+      }
+      // 첫 유저인 경우 아이디 admin으로 지정 안내
+      if (result[0].totalUsers === 0) {
+        adminMessage = "최고관리자의 아이디는 'admin'으로 정해주세요";
+        adminID='admin';
+      }
+  
+      // 쿼리 완료 후 응답을 렌더링
+      res.render('join', { adminMessage: adminMessage, adminID:adminID });
+    });
+  });
 
 app.get('/checkUserId', (req, res) => {
   const userId = req.query.userId;
@@ -187,8 +289,19 @@ app.post('/joinProc', (req, res) => {
     const userPhone = req.body.userPhone; 
     const userEmail = req.body.userEmail; 
     const userRole = req.body.userRole; 
-    const userAccept = 0; 
+    let userAccept = 0; 
 
+    const sql = 'SELECT COUNT(*) AS totalUsers FROM user';
+
+    connection.query(sql, (err, result) => {
+      if (err) throw err;
+      // 첫 유저인 경우 userAccept 값을 1로 변경
+      if (result[0].totalUsers === 0) {
+        userAccept = 1;
+        return;
+      }
+    })
+      // 비밀번호 일치 확인
     if (userPassword !== userPasswordcheck) {
       res.send("<script>alert('비밀번호가 일치하지 않습니다.'); history.go(-1);</script>");
       return;
@@ -215,12 +328,47 @@ app.post('/joinProc', (req, res) => {
   
           connection.query(insertSql, insertValues, (err, result) => {
             if (err) throw err;
-            res.send("<script>alert('등록되었습니다.'); location.href='/';</script>");
+            res.send("<script>alert('등록되었습니다. 관리자 승인을 기다려주세요.'); location.href='/';</script>");
           });
         });
       }
     });
   });
+  app.get('/userDelete/:NO', (req, res) => {
+    const loggedInUser = req.session.user;
+    //console.log("loggedInUser : "+JSON.stringify(loggedInUser))
+    
+    if (!loggedInUser) { //로그인 안했을 때
+      res.send("<script>alert('로그인 해주세요.'); location.href='/';</script>");
+      return;
+    }
+  
+    const NO = req.params.NO; 
+    // userNO가 1일때(최고관리자) 삭제 불가
+    if (NO === '1') {
+      res.send("<script>alert('최고관리자는 탈퇴 불가합니다.'); location.href='/';</script>");
+      return;
+    }
+    
+    // session의 usrNO가 파라미터의 NO와 다르거나(본인이 아니거나) 관리자가 아닌 경우
+    if (loggedInUser.userNO != NO && loggedInUser.userRole !== 'admin') {
+      res.send("<script>alert('권한이 없습니다.'); location.href='/';</script>");
+      return;
+    }
+    
+    const sql = 'DELETE FROM user WHERE `userNO` = ?';
+  
+    connection.query(sql, [NO], (err, result)=> {
+      if(err) throw err;  
+      if (loggedInUser.userNO == NO) {
+        req.session.user = null;
+        res.send("<script>alert('탈퇴가 완료되었습니다.'); location.href='/';</script>");
+      }else{
+        res.send("<script>alert('탈퇴가 완료되었습니다.'); location.href='/user';</script>");
+      }
+      })     
+    });
+
 
   app.get('/mypage', function (req,res) {
     const loggedInUser = req.session.user;
@@ -278,7 +426,7 @@ app.post('/joinProc', (req, res) => {
   
       connection.query(sql, values, (err, result) => {
         if (err) throw err;
-        res.send("<script>alert('수정되었습니다.'); location.href='/';</script>");
+        res.send("<script>alert('수정되었습니다.'); location.href='/user';</script>");
       });
     }
   });
@@ -292,6 +440,12 @@ app.get('/userDetail/:NO', (req, res) => {
   }
 
   const NO = req.params.NO; 
+  // userNO가 1일때(최종관리자), session의 userID가 'admin'이 아닌 경우 권한이 없다고 알림
+  if (NO === '1' && loggedInUser.userID !== 'admin') {
+    res.send("<script>alert('권한이 없습니다.'); location.href='/';</script>");
+    return;
+  }
+  
   const sql = 'SELECT * FROM user WHERE `userNO` = ?';
 
   connection.query(sql, [NO], (err, result)=> {
@@ -552,6 +706,7 @@ app.get('/detail/:id', (req, res) => {
   )
  })
 });
+
 
 app.post('/makeComment', (req, res) => {
   if (!req.session.user || req.session.user.userAccept === 0) {

@@ -90,7 +90,7 @@
                                 <td><input class="form-control" type="date" name="date" value="<%= formatDate(lists[i].date) %>"></td>
                                 <td><input class="form-control updateEdate" type="date" name="eDate" value="<%= formatDate(lists[i].eDate) %>" onchange="updateInput(<%=x%>)" required></td>
                                 <td><input class="form-control" type="text" name="manager" value="<%= lists[i].manager %>" required></td>
-                                <td><input class="form-control" type="text" name="phone" value="<%= lists[i].phone %>" required></td>
+                                <td><input class="form-control" type="text" name="phone" value="<%= lists[i].phone %>" oninput="oninputPhone(this)" required></td>
                                 <td><input class="form-control" type="text" name="email" value="<%= lists[i].email %>" required></td>
                                 <td><input class="form-check-input updateAuditor" type="checkbox" name="auditor" onchange="updateInput(<%=x%>)"  value="1" <%= lists[i].auditor === 1 ? "checked" : "" %> />감사있음</td>
                                 <td class="closing">
@@ -130,6 +130,12 @@
     </div>
     <%-include('footer.ejs') %>
     <script>        
+
+        function oninputPhone(target) {
+            target.value = target.value
+                .replace(/[^0-9]/g, '')
+                .replace(/(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{3,4})([0-9]{4})/g, "$1-$2-$3");
+        }
         function toggleDiv(num) {            
             const div = document.getElementsByClassName('updateForm')[num];
             div.style.display === "none" ? div.style.display = "table-row" : div.style.display = "none";

@@ -17,12 +17,13 @@
                 <div class="card card-signin my-5 shadow p-3 mb-5 bg-white rounded">
                   <div class="card-body py-5">
                     <h3 class="card-title text-center py-3 fw-semibold">회원가입 하기</h3>
+                    <div><%-adminMessage%></div>
                     <form class="form-signin" method="post" action="/joinProc">
                       <div class="d-flex justify-content-end">
                           <span class="text-danger text-right"> *&nbsp;</span> 필수입력
                       </div>
                       <div class="form-floating input-group mb-3">
-                        <input type="text" id="userID" name="userID" class="form-control my-1" maxlength="20" placeholder="" required autofocus>
+                        <input type="text" id="userID" name="userID" class="form-control my-1" maxlength="20" placeholder="" value="<%- adminID%>" <%= adminID === 'admin' ? 'readonly' : '' %>  required autofocus>
                           <label for="floatingInput">아이디<span style="color:red;"> * </span></label>
                           <button class="btn btn-outline-secondary my-1" type="button" onclick=checkDuplicateId()>중복체크</button>
                       </div>
@@ -50,8 +51,14 @@
                           <label for="floatingInput">이메일<span style="color:red;"> * </span></label>
                       </div>
                       <div class="form-floating">
-                        <input type="text" name="userRole" class="form-control my-1" placeholder="">
-                          <label for="floatingInput">담당 업무</label>
+                        <select class="form-select"  name="userRole"  aria-label="Default select example">
+                          <option selected>담당 업무</option>
+                          <option value="admin">관리자</option>
+                          <option value="영업 담당">영업담당</option>
+                          <option value="등기 담당">등기담당</option>
+                          <option value="그 외">그 외</option>
+                        </select>
+                        <label for="floatingSelect">담당업무</label>
                       </div>
                       <hr>	
                         <div class="d-grid gap-2 ">
