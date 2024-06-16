@@ -1,9 +1,9 @@
 const express = require('express')
+const session = require('express-session')
 const ejs = require('ejs') 
 const app = express()
 const port = 3000
 const bodyParser = require('body-parser')
-const session = require('express-session')
 const path = require('path')
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
@@ -50,7 +50,7 @@ const transporter = nodemailer.createTransport({
 // });
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave:true, saveUninitialized:true}))
+app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave:true, saveUninitialized:false}))
 
 app.use((req, res, next) => {
   // 모든 페이지에서 사용가능
