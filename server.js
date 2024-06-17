@@ -50,7 +50,7 @@ const transporter = nodemailer.createTransport({
 // });
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave:true, saveUninitialized:false}))
+app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave:false, saveUninitialized:false}))
 
 app.use((req, res, next) => {
   // 모든 페이지에서 사용가능
@@ -505,17 +505,18 @@ app.get('/profile', function (req,res) {
     query = 'SELECT * FROM test_table WHERE `delete` = 0 ORDER BY auditorTerm ASC;';
   }
   if (term == 'twoMonth'){
-    query = 'SELECT * FROM test_table WHERE `delete` = 0 AND ( LEAST(`directorTerm`, `auditorTerm`) > DATE_ADD(CURDATE(), INTERVAL 1 MONTH) AND LEAST(`directorTerm`, `auditorTerm`) < DATE_ADD(CURDATE(), INTERVAL 2 MONTH) ) ORDER BY LEAST(`directorTerm`, `auditorTerm`) ASC;';
-    totalQuery = 'SELECT COUNT(*) AS totalCount FROM test_table WHERE `delete` = 0 AND ( LEAST(`directorTerm`, `auditorTerm`) > DATE_ADD(CURDATE(), INTERVAL 1 MONTH) AND LEAST(`directorTerm`, `auditorTerm`) < DATE_ADD(CURDATE(), INTERVAL 2 MONTH) );';
-}
-if (term == 'oneMonth'){
-    query = 'SELECT * FROM test_table WHERE `delete` = 0 AND ( LEAST(`directorTerm`, `auditorTerm`) > DATE_ADD(CURDATE(), INTERVAL 2 WEEK) AND LEAST(`directorTerm`, `auditorTerm`) < DATE_ADD(CURDATE(), INTERVAL 1 MONTH) ) ORDER BY LEAST(`directorTerm`, `auditorTerm`) ASC;';
-    totalQuery = 'SELECT COUNT(*) AS totalCount FROM test_table WHERE `delete` = 0 AND ( LEAST(`directorTerm`, `auditorTerm`) > DATE_ADD(CURDATE(), INTERVAL 2 WEEK) AND LEAST(`directorTerm`, `auditorTerm`) < DATE_ADD(CURDATE(), INTERVAL 1 MONTH) );';
-}
-if (term == 'twoWeek'){
-    query = 'SELECT * FROM test_table WHERE `delete` = 0 AND ( LEAST(`directorTerm`, `auditorTerm`) <= DATE_ADD(CURDATE(), INTERVAL 2 WEEK) AND LEAST(`directorTerm`, `auditorTerm`) >= CURDATE() ) ORDER BY LEAST(`directorTerm`, `auditorTerm`) ASC;';
-    totalQuery = 'SELECT COUNT(*) AS totalCount FROM test_table WHERE `delete` = 0 AND ( LEAST(`directorTerm`, `auditorTerm`) <= DATE_ADD(CURDATE(), INTERVAL 2 WEEK) AND LEAST(`directorTerm`, `auditorTerm`) >= CURDATE() );';
-}
+    query = ` SELECT * FROM test_table WHERE \`delete\` = 0 AND LEAST(\`directorTerm\`, \`auditorTerm\`) > DATE_ADD(CURDATE(), INTERVAL 1 MONTH) AND LEAST(\`directorTerm\`, \`auditorTerm\`) <= DATE_ADD(CURDATE(), INTERVAL 2 MONTH) ORDER BY LEAST(\`directorTerm\`, \`auditorTerm\`) ASC; `;
+    totalQuery = 'SELECT COUNT(*) AS totalCount FROM test_table WHERE \`delete\` = 0 AND LEAST(\`directorTerm\`, \`auditorTerm\`) > DATE_ADD(CURDATE(), INTERVAL 1 MONTH) AND LEAST(\`directorTerm\`, \`auditorTerm\`) <= DATE_ADD(CURDATE(), INTERVAL 2 MONTH);';
+  }
+  if (term == 'oneMonth'){
+    query = ` SELECT * FROM test_table WHERE \`delete\` = 0 AND LEAST(\`directorTerm\`, \`auditorTerm\`) > DATE_ADD(CURDATE(), INTERVAL 2 WEEK) AND LEAST(\`directorTerm\`, \`auditorTerm\`) <= DATE_ADD(CURDATE(), INTERVAL 1 MONTH) ORDER BY LEAST(\`directorTerm\`, \`auditorTerm\`) ASC; `;
+    totalQuery = ` SELECT COUNT(*) AS totalCount FROM test_table WHERE \`delete\` = 0 AND LEAST(\`directorTerm\`, \`auditorTerm\`) > DATE_ADD(CURDATE(), INTERVAL 2 WEEK) AND LEAST(\`directorTerm\`, \`auditorTerm\`) <= DATE_ADD(CURDATE(), INTERVAL 1 MONTH); `;
+  }
+  if (term == 'twoWeek'){
+    query = ` SELECT * FROM test_table WHERE \`delete\` = 0 AND ( LEAST(\`directorTerm\`, \`auditorTerm\`) <= DATE_ADD(CURDATE(), INTERVAL 2 WEEK) OR LEAST(\`directorTerm\`, \`auditorTerm\`) < CURDATE() ) ORDER BY LEAST(\`directorTerm\`, \`auditorTerm\`) ASC; `;
+    totalQuery = ` SELECT COUNT(*) AS totalCount FROM test_table WHERE \`delete\` = 0 AND ( LEAST(\`directorTerm\`, \`auditorTerm\`) <= DATE_ADD(CURDATE(), INTERVAL 2 WEEK) OR LEAST(\`directorTerm\`, \`auditorTerm\`) < CURDATE() ); `;
+  }
+
   connection.query(query, (err, results) => {
     if (err) {
       console.error('쿼리 실행 중 에러:', err);
