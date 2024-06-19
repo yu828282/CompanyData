@@ -11,12 +11,6 @@ body{
   max-width: 2000px;
   min-width: 300px;
 }
-
-#profileTable th, #profileTable td {
-}
-footer{
-  margin: 10px 50px;
-}
 #nav1{
   height: 50px;
 }
@@ -47,16 +41,11 @@ footer{
   position: relative;
   width: 100%;
 }
-footer {
-	width: 100%;
-	height: 110px; /* 내용물에 따라 알맞는 값 설정 */
-	bottom: 0px;
-	position: absolute;
-}
 
 .main-page{
   margin: 30px 10px;
-  padding: 50px 0 50px 0;
+  padding: 50px 0 150px 0;
+  min-height: 750px;
 }
 .active{
   font-weight: 600;

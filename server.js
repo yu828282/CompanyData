@@ -1,6 +1,5 @@
 const express = require('express')
 const session = require('express-session')
-const ejs = require('ejs') 
 const app = express()
 const port = 3000
 const bodyParser = require('body-parser')
@@ -13,7 +12,9 @@ const { formatDate } = require('./util');
 const { isDatePastTwoWeek,isDatePastTwoMonth,isDatePastOneMonth,isDatePast } = require('./util');
 const { formatDateString } = require('./util');
 const { findTime } = require('./util');
+// 비밀번호 재설정용
 const nodemailer = require('nodemailer');
+const { createClient } = require('redis');
 
 const cookieParser = require('cookie-parser');
 app.use(cookieParser()); // cookie-parser 미들웨어 설정
@@ -43,6 +44,10 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASSWORD
   }
 });
+// 비밀번호 재설정 링크 생성 함수
+function generateResetToken() {
+  return crypto.randomBytes(20).toString('hex');
+}
  
 // connection.query('SELECT * FROM test.test_table', function (error, results, fields) {
 //   if (error) throw error;
@@ -50,7 +55,13 @@ const transporter = nodemailer.createTransport({
 // });
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave:false, saveUninitialized:false}))
+//세션설정
+app.use(session({ 
+  secret: 'keyboard cat', 
+  resave:false, 
+  saveUninitialized:false,
+  cookie: { maxAge: 60000 }, 
+}))
 
 app.use((req, res, next) => {
   // 모든 페이지에서 사용가능
@@ -183,10 +194,10 @@ app.get('/findID', function (req,res) {
   res.render('findID')
   }
 );
-// 임시 비밀번호 생성 함수
-function generateTempPassword() {
-  return crypto.randomBytes(8).toString('hex'); // 16자리 임시 비밀번호 생성
-}
+// 임시 비밀번호 생성 함수 
+// function generateTempPassword() {
+//   return crypto.randomBytes(8).toString('hex'); // 16자리 임시 비밀번호 생성
+// }
 
 // 비밀번호 찾기 폼 렌더링
 app.get('/findPassword', (req, res) => {
@@ -194,7 +205,7 @@ app.get('/findPassword', (req, res) => {
 });
 
 // 비밀번호 찾기 처리
-app.post('/findPassword', (req, res) => {
+app.post('/request-password-reset', (req, res) => {
   const userID = req.body.userID.trim();
   const userEmail = req.body.userEmail.trim();
 
@@ -205,37 +216,79 @@ app.post('/findPassword', (req, res) => {
       return res.status(500).send('Database query error');
     }
     if (results.length > 0) {
-      const tempPassword = generateTempPassword();
-      const saltRounds = 10;
-
-      bcrypt.hash(tempPassword, saltRounds, (err, hashedPassword) => {
+      const resetToken = generateResetToken();
+      const resetExpires = Date.now() + 24 * 60 * 60 * 1000; // 24시간      
+      const updateSql = 'UPDATE user SET resetToken = ?, resetExpires = ? WHERE userID = ?';
+      connection.query(updateSql, [resetToken, resetExpires, userID], (err) => {
         if (err) {
-          return res.status(500).send('Failed to hash password');
+          return res.status(500).send('Failed to update reset token');
         }
+        const resetUrl = `http://${process.env.DB_HOST}:${process.env.DB_PORT}/reset-password?token=${resetToken}`;
 
-        const updateSql = 'UPDATE user SET userPW = ? WHERE userID = ?';
-        connection.query(updateSql, [hashedPassword, userID], (err, updateResult) => {
-          if (err) {
-            return res.status(500).send('Failed to update password');
+        const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: userEmail,
+          subject: '비밀번호 재설정 요청',
+          text: `비밀번호를 재설정하려면 다음 링크를 클릭하세요: ${resetUrl} ⚠️이 링크는 24시간 동안 유효합니다.`
+        };
+
+        transporter.sendMail(mailOptions, (error) => {
+          if (error) {
+            return res.status(500).send('Failed to send email');
           }
-
-          const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: userEmail,
-            subject: '임시 비밀번호 발송',
-            text: `${userID}님의 임시 비밀번호는 ${tempPassword} 입니다. 로그인 후 반드시 비밀번호를 변경해주세요.`
-          };
-
-          transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              return res.status(500).send('Failed to send email');
-            }
-            res.send("<script>alert('임시 비밀번호가 이메일로 발송되었습니다.'); location.href='/login';</script>");
-          });
+          res.send("<script>alert('비밀번호 재설정 링크가 이메일로 발송되었습니다.'); location.href='/login';</script>");
         });
       });
     } else {
-      res.send("<script>alert('해당하는 사용자가 없습니다.'); history.go(-1);</script>");
+      res.send("<script>alert('일치하는 사용자 정보가 없습니다.'); history.go(-1);</script>");
+    }
+  });
+});
+// 비밀번호 재설정 페이지 라우팅
+app.get('/reset-password', (req, res) => {
+  const { token } = req.query;
+
+  const sql = 'SELECT * FROM user WHERE resetToken = ? AND resetExpires > ?';
+  connection.query(sql, [token, Date.now()], (err, results) => {
+    if (err) {
+      return res.status(500).send('Database query error');
+    }
+
+    if (results.length > 0) {
+      res.render('reset-password', { token });
+    } else {
+      res.send("<script>alert('비밀번호 재설정 링크가 유효하지 않거나 만료되었습니다.😢'); location.href='/findPassword';</script>");
+    }
+  });
+});
+
+// 비밀번호 재설정 처리 라우팅
+app.post('/reset-password', (req, res) => {
+  const { token, newPassword } = req.body;
+  const sql = 'SELECT * FROM user WHERE resetToken = ? AND resetExpires > ?';
+
+  connection.query(sql, [token, Date.now()], (err, results) => {
+    if (err) {
+      return res.status(500).send('Database query error');
+    }
+    if (results.length > 0) {
+      const userId = results[0].userID;
+
+      // 비밀번호 해시화
+      bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
+        if (err) {
+          return res.status(500).send('Failed to hash password');
+        }
+        const updateSql = 'UPDATE user SET userPW = ?, resetToken = NULL, resetExpires = NULL WHERE userID = ?';
+        connection.query(updateSql, [hashedPassword, userId], (err) => {
+          if (err) {
+            return res.status(500).send('Failed to update password');
+          }
+          res.send("<script>alert('비밀번호가 성공적으로 재설정되었습니다.'); location.href='/login';</script>");
+        });
+      });
+    } else {
+      res.send("<script>alert('비밀번호 재설정 링크가 유효하지 않거나 만료되었습니다.😢'); location.href='/findPassword';</script>");
     }
   });
 });
