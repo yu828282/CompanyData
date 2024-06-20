@@ -1,5 +1,6 @@
 const express = require('express')
 const session = require('express-session')
+const cookieParser = require('cookie-parser');
 const app = express()
 const port = 3000
 const bodyParser = require('body-parser')
@@ -14,9 +15,7 @@ const { formatDateString } = require('./util');
 const { findTime } = require('./util');
 // 비밀번호 재설정용
 const nodemailer = require('nodemailer');
-const { createClient } = require('redis');
 
-const cookieParser = require('cookie-parser');
 app.use(cookieParser()); // cookie-parser 미들웨어 설정
 
 require('dotenv').config();

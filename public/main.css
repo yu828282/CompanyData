@@ -44,7 +44,7 @@ body{
 
 .main-page{
   margin: 30px 10px;
-  padding: 50px 0 150px 0;
+  padding: 50px 0 50px 0;
   min-height: 750px;
 }
 .active{
@@ -108,4 +108,10 @@ body{
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
+}
+.footer{
+	bottom: 0px;
+	position: absolute;
+	height: 10rem;
+
 }
