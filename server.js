@@ -222,7 +222,7 @@ app.post('/request-password-reset', (req, res) => {
         if (err) {
           return res.status(500).send('Failed to update reset token');
         }
-        const resetUrl = `http://${process.env.DB_HOST}:${process.env.DB_PORT}/reset-password?token=${resetToken}`;
+        const resetUrl = `http://${process.env.ADRESS}:${port}/reset-password?token=${resetToken}`;
 
         const mailOptions = {
           from: process.env.EMAIL_USER,
