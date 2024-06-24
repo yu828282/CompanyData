@@ -29,8 +29,8 @@
 
     %>  
     <%-include('header.ejs') %>
-    <div class="main-page">
-        <table class="table detailTable">
+    <div class="main-page px-5">
+        <table class="detailTable">
             <thead>
               <tr>
                 <td colspan="4" class="fs-3 fw-bold">
@@ -112,7 +112,7 @@
               <div class="col-auto"><input type="time" name="time" class="form-control" value="<%-dateTime(commentLists[i].date)%>" readonly></div>
               <div class="col-auto input-small"><input type="text" name="user" class="form-control" placeholder="상담한 직원 이름" value="<%-commentLists[i].user%>" readonly></div>
               <div class="col-auto"><input type="text" name="title" class="form-control" placeholder="간략한 내용" value="<%-commentLists[i].title%>"  readonly></div>                    
-              <div class="col-auto"><textarea name="memo" class="form-control" cols="30" rows="1" placeholder="세부 내용" readonly><%-commentLists[i].memo%></textarea></div>
+              <div class="col-90"><textarea name="memo" class="form-control" cols="30" rows="1" placeholder="세부 내용" readonly><%-commentLists[i].memo%></textarea></div>
               <div class="col-auto bottom"><a onclick=toggleDiv(<%=x%>)>수정</a></div>
               <div class="col-auto bottom"><a href='/commentDelete?id=<%= commentLists[i].commentId %>&corpid=<%=id%>' onclick="return confirm('정말 삭제할까요?')">삭제</a></div>
             </div>

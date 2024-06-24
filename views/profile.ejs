@@ -26,7 +26,7 @@
 </head>
 <body>
     <%-include('header.ejs') %>
-    <div class="main-page">
+    <div class="container mt-5">
         <div class="search d-flex justify-content-end" >
             <form action="/profile/1" method="get">
                 <div class="input-group">     
@@ -68,20 +68,20 @@
                         let x = i % pageSize;
                     %>
                         <tr class="clickable" onclick="handleRowClick(event, '<%=lists[i].id%>')">
-                            <td> <%=lists[i].id%> </td>
-                            <td> <a href="/detail/<%=lists[i].id%>"><%=lists[i].corp%></a> </td>
-                            <td> <%=formatDate(lists[i].date)%> </td>
-                            <td> <%=formatDate(lists[i].eDate)%> </td>
-                            <td> <%=lists[i].manager%> </td>
-                            <td> <%=lists[i].phone%> </td>
-                            <td> <%-lists[i].email%> </td>        
-                            <td> <%= lists[i].auditor === 1 ? '○' : ' ' %> </td>
-                            <td> <%=lists[i].closing%> </td>
-                            <td class= "<%= isDatePastTwoMonth(formatDate(lists[i].directorTerm)) ? 'alertRed' : ''  %> "><%=formatDate(lists[i].directorTerm)%> </td>
-                            <td class= "<%= isDatePastTwoMonth(formatDate(lists[i].auditorTerm)) ? 'alertRed' : ''  %> "><%=formatDate(lists[i].auditorTerm)%> </td>
-                            <td> <%=lists[i].memo%> </td>       
-                            <td> <a onclick=toggleDiv(<%=x%>)>수정</a></td>
-                            <td> <a href="/profileDelete?id=<%=lists[i].id%>" onclick="return confirm('정말 삭제할까요?')">삭제</a></td>       
+                            <td data-label="No"> <%=lists[i].id%> </td>
+                            <td data-label="상호"> <a href="/detail/<%=lists[i].id%>"><%=lists[i].corp%></a> </td>
+                            <td data-label="설립일"> <%=formatDate(lists[i].date)%> </td>
+                            <td data-label="취임일"> <%=formatDate(lists[i].eDate)%> </td>
+                            <td data-label="담당자"> <%=lists[i].manager%> </td>
+                            <td data-label="연락처"> <%=lists[i].phone%> </td>
+                            <td data-label="이메일"> <%-lists[i].email%> </td>        
+                            <td data-label="감사"> <%= lists[i].auditor === 1 ? '○' : ' ' %> </td>
+                            <td data-label="결산"> <%=lists[i].closing%> </td>
+                            <td data-label="이사임기" class= "<%= isDatePastTwoMonth(formatDate(lists[i].directorTerm)) ? 'alertRed' : ''  %> "><%=formatDate(lists[i].directorTerm)%> </td>
+                            <td data-label="감사임기" class= "<%= isDatePastTwoMonth(formatDate(lists[i].auditorTerm)) ? 'alertRed' : ''  %> "><%=formatDate(lists[i].auditorTerm)%> </td>
+                            <td data-label="비고"> <%=lists[i].memo%> </td>       
+                            <td data-label="수정"> <a onclick=toggleDiv(<%=x%>)>수정</a></td>
+                            <td data-label="삭제"> <a href="/profileDelete?id=<%=lists[i].id%>" onclick="return confirm('정말 삭제할까요?')">삭제</a></td>       
                         </tr>
                         <tr class="updateForm" style="display: none;">
                             <form action="/updateForm?id=<%=lists[i].id%>" method="post">

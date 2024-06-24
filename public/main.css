@@ -5,9 +5,54 @@ body{
   background-position: 0% 0%, right center;
   color: #272D38;
 }
+img {
+  margin: auto;
+  display: block;
+}
+.container{
+  padding: 0 4%;
+}
 
 .table-responsive {
   overflow-x: auto;
+}
+
+@media (max-width: 750px) {
+    .main-table {
+        width: 100%;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .main-table thead, .main-table tbody, .main-table th, .main-table td, .main-table tr {
+        display: block;
+    }
+
+    .main-table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .main-table tr {
+        border: 1px solid #ccc;
+    }
+
+    .main-table td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    .main-table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 50%;
+        padding-left: 15px;
+        font-weight: bold;
+    }
 }
 
 #profileTable{
@@ -47,7 +92,6 @@ body{
   text-decoration: none;
 
 }
-
 #wrap {
   min-height: 150px;
   position: relative;
@@ -57,7 +101,9 @@ body{
 .main-page{
   margin: 30px 10px;
   padding: 50px 0 50px 0;
-  min-height: 750px;
+  min-height: 960px;
+  max-width: 960px;
+  margin: auto;
 }
 .active{
   font-weight: 600;
@@ -73,6 +119,7 @@ body{
 .detailTable{
   max-width: 800px;
   table-layout: auto;
+  background-color: #fff0;
 }
 
 .detailTable th {
