@@ -1,6 +1,11 @@
 body{
   overflow-x: hidden;
+  background-image : url('./images/Ellipse\ 2.png'), url('./images/Ellipse\ 3.png');
+  background-repeat : no-repeat, no-repeat;
+  background-position: 0% 0%, right center;
+  color: #272D38;
 }
+
 .table-responsive {
   overflow-x: auto;
 }
@@ -13,9 +18,11 @@ body{
 }
 #nav1{
   height: 50px;
+  max-width: 1200px;
 }
 
 #nav1>a {
+    color: #272D38;
     display: block; /* a태그는 글자성격 = inline */
     float: left;
     font-size: 30px;
@@ -24,16 +31,21 @@ body{
     padding: 0 30px;
     margin-bottom: 5px;
     cursor: pointer;
+    text-decoration: none;
 }
 #nav1>ul {
   float: right;
   list-style-type: none;
-  text-decoration: none;
 }
 #nav1>ul li {
   float: left;
   padding: 0 10px;
   line-height: 50px;
+}
+#nav1>ul li a{
+  color: #272D38;
+  text-decoration: none;
+
 }
 
 #wrap {
@@ -114,4 +126,19 @@ body{
 	position: absolute;
 	height: 10rem;
 
+}
+.can-job{
+  background-color: #F6F6F6;
+  border-radius : 20px;
+  text-align: center;
+  padding: 3% 0 ;
+}
+
+.footer-container{
+  background-color: #F6F6F6;
+}
+.none-a{
+  color: #272D38;
+  cursor: pointer;
+  text-decoration: none;
 }
