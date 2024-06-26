@@ -125,10 +125,13 @@ app.get('/', function (req,res) {
 });
 
 app.get('/login', function (req,res) {
-  const rememberId = req.cookies.rememberId || '';
-  res.render('login',{cookie:rememberId})
+  if (req.session.user) {
+    res.send("<script>alert('이미 로그인 되어 있습니다.'); history.go(-1);</script>");
+  }else{
+    const rememberId = req.cookies.rememberId || '';
+    res.render('login',{cookie:rememberId})
   }
-)
+})
 
 app.post('/loginProc', (req, res) => {
   const id  = req.body.userId.trim(); 
