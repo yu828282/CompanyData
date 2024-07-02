@@ -1,5 +1,6 @@
 const express = require('express')
 const session = require('express-session')
+const MemoryStore = require('memorystore')(session);
 const cookieParser = require('cookie-parser');
 const app = express()
 const port = 3000
@@ -35,6 +36,7 @@ connection.connect((error) => {
   console.log('MySQL 연결 성공!');
 });
 
+
 // Nodemailer 설정
 const transporter = nodemailer.createTransport({
   service: process.env.EMAIL,
@@ -56,10 +58,16 @@ function generateResetToken() {
 app.use(express.static(path.join(__dirname, 'public')));
 //세션설정
 app.use(session({ 
+  store: new MemoryStore({
+    checkPeriod: 24 * 60 * 60 * 1000 // 24시간
+  }),
   secret: 'keyboard cat', 
   resave:false, 
   saveUninitialized:false,
-  cookie: { maxAge: 60000 }, 
+  cookie: {
+    secure: false, // HTTPS를 사용하는 경우 true로 설정
+    maxAge: 24 * 60 * 60 * 1000 // 세션 만료 시간 (24시간)
+  }
 }))
 
 app.use((req, res, next) => {
@@ -172,8 +180,14 @@ app.post('/loginProc', (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
-    req.session.user = null;
+  req.session.user = null;
+    req.session.destroy(err => {
+      if (err) {
+        return res.status(500).send('로그아웃 실패, 관리자에게 문의해주세요');
+      }
+    res.clearCookie('connect.sid');
     res.send("<script>alert('로그아웃 되었습니다.'); location.href='/';</script>");
+    });
   });
 
 app.post('/findIDProc', (req, res) => {
@@ -296,23 +310,26 @@ app.post('/reset-password', (req, res) => {
 });
 
   app.get('/join', function (req, res) {
-    const sql = 'SELECT COUNT(*) AS totalUsers FROM user';
-    let adminMessage = "";
-    let adminID = "";
-  
-    connection.query(sql, (err, result) => {
-      if (err) {
-        throw err;
-      }
-      // 첫 유저인 경우 아이디 admin으로 지정 안내
-      if (result[0].totalUsers === 0) {
-        adminMessage = "최고관리자의 아이디는 'admin'으로 정해주세요";
-        adminID='admin';
-      }
-  
-      // 쿼리 완료 후 응답을 렌더링
-      res.render('join', { adminMessage: adminMessage, adminID:adminID });
-    });
+    if (req.session.user) {
+      res.send("<script>alert('이미 로그인 되어 있습니다.'); history.go(-1);</script>");
+    }else{    
+      const sql = 'SELECT COUNT(*) AS totalUsers FROM user';
+      let adminMessage = "";
+      let adminID = "";
+    
+      connection.query(sql, (err, result) => {
+        if (err) {
+          throw err;
+        }
+        // 첫 유저인 경우 아이디 admin으로 지정 안내
+        if (result[0].totalUsers === 0) {
+          adminMessage = "최고관리자의 아이디는 'admin'으로 정해주세요";
+          adminID='admin';
+        }    
+        // 쿼리 완료 후 응답을 렌더링
+        res.render('join', { adminMessage: adminMessage, adminID:adminID });
+      });
+    }
   });
 
 app.get('/checkUserId', (req, res) => {

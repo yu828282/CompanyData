@@ -26,7 +26,8 @@
                             <span id="password-toggle" class="password-toggle-icon-login">👁️‍🗨️</span>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="remember" id="remember" name="rememberId">
+                            <input class="form-check-input" type="checkbox" value="remember" id="remember" name="rememberId" <%= cookie ? "checked" : "" %> >
+
                             <label class="form-check-label" for="remember">ID 저장하기</label>
                         </div>
                         <hr>	

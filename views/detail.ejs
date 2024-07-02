@@ -74,12 +74,12 @@
                 <th scope="row">이사임기</th>
                 <td class= "<%= isDatePastTwoMonth(formatDate(list[0].directorTerm)) ? 'alertRed' : ''  %> ">
                   <%= formatDate(list[0].directorTerm)%>
-                  <%= isDatePastTwoWeek(list[0].directorTerm) ? '(20일도 안 남았어요😢)' : isDatePastOneMonth(list[0].directorTerm) ? '(한달 후 만료)' : isDatePastTwoMonth(list[0].directorTerm) ? '(두달 후 만료)' :'' %>
+                  <%= isDatePastTwoWeek(list[0].directorTerm) ? '(20일도 안 남았어요😢)' : isDatePastOneMonth(list[0].directorTerm) ? '(한달 내 만료)' : isDatePastTwoMonth(list[0].directorTerm) ? '(두달 내 만료)' :'' %>
                 </td>
                 <th scope="row">감사임기</th>
                 <td class= "<%= isDatePastTwoMonth(formatDate(list[0].auditorTerm)) ? 'alertRed' : ''  %> ">
                   <%= formatDate(list[0].auditorTerm)%>
-                  <%= isDatePastTwoWeek(list[0].auditorTerm) ? '(20일도 안 남았어요😢)' : isDatePastOneMonth(list[0].auditorTerm) ? '(한달 후 만료)' : isDatePastTwoMonth(list[0].auditorTerm) ? '(두달 후 만료)' :'' %>
+                  <%= isDatePastTwoWeek(list[0].auditorTerm) ? '(20일도 안 남았어요😢)' : isDatePastOneMonth(list[0].auditorTerm) ? '(한달 내 만료)' : isDatePastTwoMonth(list[0].auditorTerm) ? '(두달 내 만료)' :'' %>
                 </td>
               </tr>
               <tr>
@@ -144,7 +144,7 @@
           </ul>
       </nav>
       <div class="d-flex justify-content-end px-1">
-        <button class="btn btn-outline-secondary" onclick = "location.href = '/detail'">목록으로 돌아가기</button>
+        <button class="btn btn-outline-secondary" onclick = "history.back();">목록으로 돌아가기</button>
       </div>
     </div>
     <%-include('footer.ejs') %>
