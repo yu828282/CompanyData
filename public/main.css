@@ -13,6 +13,17 @@ img {
   padding: 0 4%;
 }
 
+#kakaotalk-sharing-btn{
+  text-decoration: none;
+}
+.sendMail{
+  color: #272D38;
+}
+#kakaotalk-sharing-btn :hover, .sendMail :hover{    
+  transform : translateY(-0.25rem);
+  transition : .25s;
+}
+
 .table-responsive {
   overflow-x: auto;
 }

@@ -7,7 +7,7 @@ const port = 3000
 const bodyParser = require('body-parser')
 const path = require('path')
 const mysql = require('mysql');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const saltRounds = 10;
 const { formatDate } = require('./util');
@@ -39,10 +39,16 @@ connection.connect((error) => {
 
 // Nodemailer 설정
 const transporter = nodemailer.createTransport({
-  service: process.env.EMAIL,
+  host: process.env.EMAIL_WORKS_HOST,
+  port: process.env.EMAIL_WORKS_PORT,
+  secure: true, // true for 465, false for other ports
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
+    user: process.env.EMAIL_WORKS_USER,
+    pass: process.env.EMAIL_WORKS_PASSWORD
+  // service: process.env.EMAIL,
+  // auth: {
+  //   user: process.env.EMAIL_USER,
+  //   pass: process.env.EMAIL_PASSWORD
   }
 });
 // 비밀번호 재설정 링크 생성 함수
@@ -242,10 +248,10 @@ app.post('/request-password-reset', (req, res) => {
         const resetUrl = `http://${process.env.ADRESS}:${port}/reset-password?token=${resetToken}`;
 
         const mailOptions = {
-          from: process.env.EMAIL_USER,
+          from: process.env.EMAIL_WORKS_USER,
           to: userEmail,
           subject: '비밀번호 재설정 요청',
-          text: `비밀번호를 재설정하려면 다음 링크를 클릭하세요: ${resetUrl} ⚠️이 링크는 24시간 동안 유효합니다.`
+          text: `비밀번호를 재설정하려면 다음 링크를 클릭하세요: ${resetUrl} \n ⚠️이 링크는 24시간 동안 유효합니다.`
         };
 
         transporter.sendMail(mailOptions, (error) => {
@@ -780,6 +786,38 @@ app.get('/detail/:id', (req, res) => {
  })
 });
 
+app.get('/sendmail/:id', (req, res) => {
+  if (!req.session.user || req.session.user.userAccept === 0) {
+    res.send("<script>alert('권한이 없습니다.'); location.href='/';</script>");
+    return;
+  }
+  const id = req.params.id; 
+  const sql = 'SELECT * FROM test_table WHERE `delete` = 0 AND `id` = ?';
+
+  connection.query(sql, [id], (err, result)=> {
+    if(err) throw err; 
+
+    let auditorTerm = '';
+    if(result[0].auditor || result[0].auditor !== null){
+      auditorTerm = '감사임기 만료일' + formatDate(result[0].auditorTerm);
+    }
+    let sendingText = `안녕하세요, 해피브릿지 입니다. \n ${result[0].corp}의 임기만료 안내차 연락드렸습니다. \n 이사임기 만료일 :${formatDate(result[0].directorTerm)} \n ${auditorTerm} \n 임기연장 문의사항은 하단 링크를 통해 연락주세요. \n\n전화 : 02-1599-1873 / 이메일 : help@hb.re.kr / 카카오톡 : https://open.kakao.com/me/kidn`;
+
+    const mailOptions = {
+      from: process.env.EMAIL_WORKS_USER,
+      to: result[0].email,
+      subject: `${result[0].corp}의 임기만료일자 안내드립니다.`,
+      text:  sendingText,
+    };
+
+    transporter.sendMail(mailOptions, (error) => {
+      if (error) {
+        return res.status(500).send('Failed to send email');
+      }
+      res.send("<script>alert('이메일이 발송되었습니다.'); history.go(-1);</script>");
+    });
+  });
+});
 
 app.post('/makeComment', (req, res) => {
   if (!req.session.user || req.session.user.userAccept === 0) {
