@@ -801,7 +801,21 @@ app.get('/sendmail/:id', (req, res) => {
     if(result[0].auditor || result[0].auditor !== null){
       auditorTerm = '감사임기 만료일 : ' + formatDate(result[0].auditorTerm);
     }
-    let sendingText = `안녕하세요, 해피브릿지 입니다. \n ${result[0].corp}의 임기만료 안내차 연락드렸습니다. \n\n 이사임기 만료일 : ${formatDate(result[0].directorTerm)} \n ${auditorTerm} \n\n 임기연장 문의사항은 하단 링크를 통해 연락주세요. \n\n전화 : 02-1599-1873 / 이메일 : help@hb.re.kr / 카카오톡 : https://open.kakao.com/me/kidn`;
+    let sendingText = `
+      안녕하세요, 해피브릿지 입니다. \n ${result[0].corp}의 임기만료일 안내차 연락드렸습니다. \n\n 이사임기 만료일 : ${formatDate(result[0].directorTerm)} \n ${auditorTerm}           
+      \n\n 그 외 법인 변경관련 안내문 보내드립니다. 업무 참고 부탁드립니다.
+      \n\n - 법인변경등기 종류 -
+      \n 1. 상호변경
+      \n 2. 본점주소 변경
+      \n 3. 자본금 변경(유상증자)
+      \n 4. 발행주식 수 변경
+      \n 5. 임원 변경 (임기만료/ 사임/ 취임/ 개명/ 사망 등)
+      \n 6. 사업 목적 변경
+      \n 7. 대표자의 주민등록등본상 주소
+      \n - 신고기한 : 변경기준일로부터 2주 내
+      \n\n 임기연장 문의사항은 하단 링크를 통해 연락주세요. 
+      \n\n전화 : 02-1599-1873 / 이메일 : help@hb.re.kr / 카카오톡 : https://open.kakao.com/me/kidn
+    `;
 
     const mailOptions = {
       from: process.env.EMAIL_WORKS_USER,

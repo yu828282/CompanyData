@@ -16,7 +16,7 @@
       <li><a href="/register">등록</a></li>
       <% if(locals.userName){ %>
         <li><a href="/mypage">나의 정보</a></li>
-        <li><a href="/logout">로그아웃</a></li>
+        <li><a href="/logout" onclick="handleLogOutClick(event)">로그아웃</a></li>
       <% }else{ %>
         <li><a href="/login">로그인</a></li>
       <% } %>
@@ -37,4 +37,11 @@
         exiticon.style.display = 'none';
       }
   }
+    function handleLogOutClick(event) {
+      event.preventDefault(); // 기본 링크 동작을 막음
+      const confirmLogOut = window.confirm("정말 로그아웃 하시겠습니까?");
+      if (confirmLogOut) {
+        window.location.href = "/logout"; // 확인 후 로그아웃 URL로 이동
+      }
+    }
 </script>
