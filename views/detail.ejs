@@ -168,13 +168,13 @@
         container: '#kakaotalk-sharing-btn',
         objectType: 'text',
         text:
-          `안녕하세요, 해피브릿지 입니다. \n <%= list[0].corp%>의 임기만료일 안내차 연락드렸습니다. 
+          `안녕하세요, 해피브릿지 입니다. \n 법인(상호 : <%= list[0].corp%>)의 임기만료일 안내드립니다. 
           \n\n 이사임기 만료일 : <%= formatDate(list[0].directorTerm)%> \n ${auditorTerm} 
-          \n\n 법인 변경등기 안내문은 하단 링크를 참고해주세요. \n`,
+          \n\n 법인 변경등기에 대한 자세한 사항은 하단 링크 참고 부탁드립니다. \n`,
         link: {
           // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
-          mobileWebUrl: 'http://localhost:3000/',
-          webUrl: 'http://localhost:3000/',
+          mobileWebUrl: `http://${process.env.ADRESS}:${process.env.DB_PORT}/`,
+          webUrl: `http://${process.env.ADRESS}:${process.env.DB_PORT}/`,
         },
       });
     </script>
