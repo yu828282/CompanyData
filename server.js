@@ -96,6 +96,11 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // app.engine('html', require('ejs').renderFile); // 엔진설정
 
 app.get('/', function (req,res) {
+  if (!req.session.user || req.session.user.userAccept === 0) {
+    res.render('info');
+    return;
+  }
+
   let countTermEnd = 0;
 
   let query = 'SELECT * FROM test_table WHERE `delete` = 0 ORDER BY id DESC;';
@@ -813,7 +818,7 @@ app.get('/sendmail/:id', (req, res) => {
       \n 6. 사업 목적 변경
       \n 7. 대표자의 주민등록등본상 주소
       \n - 신고기한 : 변경기준일로부터 2주 내
-      \n\n 임기연장 문의사항은 하단 링크를 통해 연락주세요. 
+      \n\n 법인 변경등기 관련 문의사항은 하단 링크를 통해 연락주세요. 
       \n\n전화 : 02-1599-1873 / 이메일 : help@hb.re.kr / 카카오톡 : https://open.kakao.com/me/kidn
     `;
 
@@ -898,6 +903,10 @@ app.post('/updateComment', (req, res) => {
   });
 });
 
+
+app.get('/info', function (req,res) {
+    res.render('info')
+})
 
 app.listen(port, () => {
     console.log(`Start Server : localhost : ${port}`)

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Digital Agency</title>
     <link rel="stylesheet" href="/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/main.css">
     <script src="/bootstrap.min.js"></script>
@@ -43,7 +43,7 @@
             <a href="#" id="oneMonthTerm">🗨️ 1달</a>
             <a href="#" id="twoWeekTerm">📞 2주</a>
         </caption>
-        <div class="table-responsive d-flex justify-content-center main-table">
+        <div class="table-responsive main-table main-table">
             <table id="profileTable" class="table table-hover table-bordered">
                 <thead>
                     <tr class="table-secondary">
@@ -86,7 +86,7 @@
                         <tr class="updateForm" style="display: none;">
                             <form action="/updateForm?id=<%=lists[i].id%>" method="post">
                                 <td> <%= lists[i].id %> </td>
-                                <td><input class="form-control" type="text" name="corp" value="<%= lists[i].corp %>" required></td>
+                                <td><input class="form-control update-input" type="text" name="corp" value="<%= lists[i].corp %>" required></td>
                                 <td><input class="form-control" type="date" name="date" value="<%= formatDate(lists[i].date) %>"></td>
                                 <td><input class="form-control updateEdate" type="date" name="eDate" value="<%= formatDate(lists[i].eDate) %>" onchange="updateInput(<%=x%>)" required></td>
                                 <td><input class="form-control" type="text" name="manager" value="<%= lists[i].manager %>" required></td>
@@ -136,9 +136,13 @@
                 .replace(/[^0-9]/g, '')
                 .replace(/(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{3,4})([0-9]{4})/g, "$1-$2-$3");
         }
-        function toggleDiv(num) {            
-            const div = document.getElementsByClassName('updateForm')[num];
-            div.style.display === "none" ? div.style.display = "table-row" : div.style.display = "none";
+        function toggleDiv(num) {
+        const div = document.getElementsByClassName('updateForm')[num];
+        if (window.innerWidth < 767) {        // 모바일 또는 태블릿에서는 block으로 토글
+            div.style.display = (div.style.display === "block") ? "none" : "block";
+        } else {        // PC 화면에서는 table-row로 토글
+            div.style.display = (div.style.display === "table-row") ? "none" : "table-row";
+        }
         }
         function updateInput(num){
             var eDateInput = document.querySelectorAll('.updateEdate')[num];

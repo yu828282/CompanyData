@@ -37,12 +37,22 @@ img {
 .table-responsive {
   overflow-x: auto;
 }
+.table-secondary{
+  text-align: center;
+}
 
 #profileTable{
   table-layout:auto;
   width: 100%;
   max-width: 2000px;
   min-width: 300px;
+}
+#profileTable input[type="text"] {
+  width: max-content;
+}
+#profileTable textarea {
+  height: 145px;
+  width: 150px;
 }
 #nav1{
   height: 50px;
@@ -181,6 +191,28 @@ img {
       padding-left: 15px;
       font-weight: bold;
   }  
+  #profileTable tbody tr{
+    display: block;
+  }
+  .updateForm {
+    display: none; /* 기본적으로 숨기기 */
+  }
+
+  /* 작은 화면에서는 updateForm을 block으로 표시 */
+  @media (max-width: 1024px) {
+    .updateForm {
+      display: block;
+    }
+  }
+
+  /* PC 화면에서는 table-row로 표시 */
+  @media (min-width: 1024px) {
+    .updateForm {
+      display: table-row;
+    }
+  }
+
+
 	.search{
   width: fit-content;
   }
@@ -260,4 +292,11 @@ img {
   color: #272D38;
   cursor: pointer;
   text-decoration: none;
+}
+.contact-icon:hover{
+  box-shadow: 0
+}
+.contact-icon:hover{
+  transform: translateY(-5px);
+  transition: transform 0.2s ease-in-out;
 }
