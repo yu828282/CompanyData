@@ -805,7 +805,7 @@ app.get('/sendmail/:id', (req, res) => {
       auditorTerm = '감사임기 만료일 : ' + formatDate(result[0].auditorTerm);
     }
     let sendingText = `\n안녕하세요, 해피브릿지 입니다. \n법인(상호 : ${result[0].corp})의 임기만료일 안내드립니다.
-      \n\n이사임기 만료일 : ${formatDate(result[0].directorTerm)} \n${auditorTerm}           
+      \n\n이사임기 만료일 : ${formatDate(result[0].directorTerm)} \n${auditorTerm}
       \n\n그 외 변경등기 종류는 아래와 같습니다.\n 1. 상호 변경\n 2. 본점주소 변경\n 3. 자본금 변경 (유상증자)\n 4. 발행주식 수 변경\n 5. 임원 변경 (임기만료/ 사임/ 취임/ 개명/ 사망)\n 6. 사업 목적 변경\n 7. 대표자의 주민등록등본 상 주소 변경
       \n상세 내역 : http://${process.env.ADRESS}:${port}/
       \n\n필요 시 아래 연락처로 문의 주세요.\n\n전화 : 02-1599-1873\n이메일 : help@hb.re.kr\n카카오톡 : https://open.kakao.com/me/kidn
@@ -814,7 +814,7 @@ app.get('/sendmail/:id', (req, res) => {
     const mailOptions = {
       from: process.env.EMAIL_WORKS_USER,
       to: result[0].email,
-      subject: `[해피브릿지] 법인(상호 : ${result[0].corp})의 임기만료일 안내드립니다. `,
+      subject: `[해피브릿지] 법인(상호 : ${result[0].corp})의 임기만료일 안내드립니다.`,
       text:  sendingText,
     };
 
