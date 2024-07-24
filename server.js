@@ -892,15 +892,17 @@ app.post('/updateComment', (req, res) => {
   });
 });
 
-
 app.get('/info', function (req,res) {
     res.render('info')
+})
+
+app.get('/notice', function (req,res) {
+  res.render('notice')
 })
 
 app.listen(port, () => {
     console.log(`Start Server : localhost : ${port}`)
     });
-
  
 // connection.end((error) => {
 //   if (error) {

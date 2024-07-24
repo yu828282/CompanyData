@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Agency</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/main.css">
+    <script src="/bootstrap.min.js"></script>
+</head>
+<body>
+  <%-include('header.ejs') %>
+    <div class="main-page">
+        <div class="container">
+            <div class="py-4">
+                <div class="col-lg-6 mx-auto"> 
+                    <h2 class="fw-bold text-center">법인 변경등기 필요서류</h2>
+                    <p>* 정관에 따라 필요서류가 달라질 수 있음<br/>* 모든 증명서는 3개월 내 발급분으로 준비<br/>* 현재 본점 관할 등기소에 접수<br/>* 지점여부에 따라 공과금 달라질 수 있음</p>
+                </div>                
+                <div class="row justify-content-center pt-5 mx-1-3"> 
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">                      
+                      <p class="fs-5">대표자 주소 이전</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>대표자 주민등록초본 1통 (주소 변동내역 포함)</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">* 공과금 54,240원</p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">                         
+                      <p class="fs-5">법인인감 변경</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>대표자 개인인감도장</li><li>대표자 인감증명서 1통</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">* 공과금 0원</p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">                      
+                      <p class="fs-5">사망으로 인한 임원 퇴임 </p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>기본증명서(상세) 1통</li><li>말소자 주민등록초본 1통</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">* 공과금 54,240원</p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">                       
+                      <p class="fs-5">개명으로 인한 임원 변경</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>기본증명서(상세) 1통</li><li>주민등록초본 1통</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">* 공과금 54,240원</p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">상호/ 목적/ 발행할 주식 수 변경</p>
+                      <p>자본금 10억 미만</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>주주 전원의 개인인감도장, 인감증명서 1통</li><li>주주명부, 정관 사본</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">*
+                         공과금 54,240원<br>* (법인인감 변경시) 새 법인인감도장, 대표자 개인인감 도장, 인감증명서 1통 추가
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">         
+                      <p class="fs-5">상호/ 목적/ 발행할 주식 수 변경</p>
+                      <p>자본금 10억 이상 OR 공증</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>주식 합 1/3 이상 주주의 개인인감도장, 인감증명서 1통</li><li>주주명부, 정관 사본</li><li>법인인감증명서 1통, 등기사항전부증명서 1통 (공증용)</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">*
+                         공과금 54,240원 + 공증료 30,000원<br>* (법인인감 변경시) 새 법인인감도장, 대표자 개인인감 도장, 인감증명서 1통 추가
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">유상증자</p>
+                      <p>이사 3인 미만</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>기존 주주 전원의 개인인감도장, 인감증명서 1통</li><li>주주명부(구/신), 정관 사본</li><li>법인잔고증명서 1통</li><li>신규 주주의 막도장</li><li>(인적사항 확인용)신규 주주의 주민등록등본(법인은 사업자등록증) 사본</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 : 증자금액*0.48%(최소 135,000원)*3(중과)  + 6,000원 <br/>* 증자할 금액 이상의 잔고증명 필요 <br/>* 잔고증명일 다음날부터 등기접수 가능 <br/>* 설립 후 5년 후 법인이나 과밀억제권역 외 법인, IT등의 법인 중과 제외<br/>* 발행할 주식의 총수 검토 필요
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">유상증자</p>
+                      <p>이사 3인 미만 AND 공증</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>(기존)주식 합 1/3이상 주주의 개인인감도장, 인감증명서 1통</li><li>주주명부(구/신), 정관 사본</li><li>법인잔고증명서 1통</li><li>법인인감증명서 1통, 등기사항전부증명서 1통 (공증용)</li><li>신규 주주의 막도장</li><li>(인적사항 확인용)신규 주주의 주민등록등본(법인은 사업자등록증) 사본</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 : 증자금액*0.48%(최소 135,000원)*3(중과)  + 6,000원<br/>* 공증료 : 30,000원 <br/>* 증자할 금액 이상의 잔고증명 필요 <br/>* 잔고증명일 다음날부터 등기접수 가능 <br/>* 설립 후 5년 후 법인이나 과밀억제권역 외 법인, IT등의 법인 중과 제외<br/>* 발행할 주식의 총수 검토 필요
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">유상증자</p>
+                      <p>이사 3인 이상</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>과반수 이상 이사의 개인인감도장, 인감증명서 1통</li><li>주주명부(구/신), 정관 사본</li><li>법인잔고증명서 1통</li><li>법인인감증명서 1통, 등기사항전부증명서 1통 (공증용)</li><li>주주의 막도장</li><li>(인적사항 확인용)신규 주주의 주민등록등본(법인은 사업자등록증) 사본</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 : 증자금액*0.48%(최소 135,000원)*3(중과)  + 6,000원<br/>* 공증료 : 30,000원 <br/>* 증자할 금액 이상의 잔고증명 필요 <br/>* 잔고증명일 다음날부터 등기접수 가능 <br/>* 설립 후 5년 후 법인이나 과밀억제권역 외 법인, IT등의 법인 중과 제외<br/>* 발행할 주식의 총수 검토 필요
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">임원변경</p>
+                      <p>이사 3인 미만 OR 이사 3인 이상 대표권 없는 임원 변경 </p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li><취임/중임>주주 전원 개인인감,인감증명서 1통</li><li><취임/중임>주주명부 사본</li><li>사임 임원 개인인감, 인감증명서 1통, (대표자만)주민등록초본 1통</li><li>취임 임원 개인인감, 인감증명서 1통, 주민등록초본 1통</li><li><대표직함변경>대표 개인인감, 인감증명서 1통, 주민등록초본 1통</li><li>정관 사본</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 54,240원<br/>* 대표 직함 변경 예(사내이사 -> 대표이사/ 대표이사 -> 사내이사) <br/>* 대표자 주민등록초본에 주소변동내역 포함 <br/>* 대표자 수만큼 법인인감도장 준비
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">임원변경</p>
+                      <p>이사 3인 미만 OR 이사 3인 이상 대표권 없는 임원 변경, 공증</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li><취임/중임>주식 합 1/3이상 주주 개인인감,인감증명서 1통</li><li><취임/중임>주주명부 사본</li><li>사임 임원 개인인감, 인감증명서 1통, (대표자만)주민등록초본 1통</li><li>취임 임원 개인인감, 인감증명서 1통, 주민등록초본 1통</li><li><대표직함변경>대표 개인인감, 인감증명서 1통, 주민등록초본 1통</li><li><취임/중임>법인 인감증명서 1통, 등기사항전부증명서 1통 (공증용)</li><li>정관 사본</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 54,240원<br/>* 공증료 30,000원 <br/>* 대표 직함 변경 예(사내이사 -> 대표이사/ 대표이사 -> 사내이사) <br/>* 대표자 주민등록초본에 주소변동내역 포함 <br/>* 대표자 수만큼 법인인감도장 준비 <br/>* 사임만 하는 경우 공증 필요없음<br/>* 주주이자 임원인 경우 인감증명 2통 준비
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">대표변경</p>
+                      <p>이사 3인 이상 AND 제3자 취임, 공증</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li><대표이사 변경시>이사 과반수 이상의 개인인감, 인감증명서 1통</li><li><취임/중임>주식 합 1/3이상 주주 개인인감,인감증명서 1통</li><li><취임/중임>주주명부 사본</li><li>사임 임원 개인인감, 인감증명서 1통, (대표자만)주민등록초본 1통</li><li>취임 임원 개인인감, 인감증명서 1통, 주민등록초본 1통</li><li><취임/중임>법인 인감증명서 1통, 등기사항전부증명서 1통 (공증용)</li><li>정관 사본</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 54,240원<br/>* 공증료 60,000원 <br/>* 대표자 주민등록초본에 주소변동내역 포함 <br/>* 대표자 수만큼 법인인감도장 준비<br/>* 변경 임원인 경우 인감증명 2통 준비
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">대표변경</p>
+                      <p>이사 3인 이상 AND 기존 이사 취임, 공증</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>이사 과반수 이상의 개인인감, 인감증명서 1통</li><li>사임 임원 개인인감, 인감증명서 1통, (대표자만)주민등록초본 1통</li><li>취임 임원 개인인감, 인감증명서 1통, 주민등록초본 1통</li><li><취임/중임>법인 인감증명서 1통, 등기사항전부증명서 1통 (공증용)</li><li>정관 사본</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 54,240원<br/>* 공증료 30,000원 <br/>* 대표자 주민등록초본에 주소변동내역 포함 <br/>* 대표자 수만큼 법인인감도장 준비<br/>* 변경 임원인 경우 인감증명 2통 준비
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">관내이전</p>
+                      <p>이사 3인 미만</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>임대차계약서 사본(주소확인용)</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 141,000원
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">관내이전</p>
+                      <p>이사 3인 이상</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>임대차계약서 사본(주소확인용)</li><li>이사 과반수 이상 개인인감, 인감증명서 1통</li><li>정관 사본</li><li>법인인감증명서 1통, 등기사항전부증명서 1통 (공증용)</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 141,000원<br/>* 공증료 30,000원
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">관외이전</p>
+                      <p>이사 3인 미만</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>임대차계약서 사본(주소확인용)</li><li>주주 전원의 개인인감, 인감증명서 1통</li><li>주주명부 사본, 정관 사본</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 정률 219,240원<br/>* 변경주소지 상호검색 필수<br/>* 비과밀 -> 과밀억제권역의 경우 54,240원 + 설립 공과금 <br/>* 과밀 -> 과밀은 정률 * IT업종 등 중과제외
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">관외이전</p>
+                      <p>이사 3인 미만, 공증</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>임대차계약서 사본(주소확인용)</li><li>주식 합 1/3이상인 주주의 개인인감, 인감증명서 1통</li><li>주주명부 사본, 정관 사본</li><li>법인인감증명서 1통, 등기사항전부증명서 1통 (공증용)</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 정률 219,240원<br/>* 공증료 30,000원<br/>* 변경주소지 상호검색 필수<br/>* 비과밀 -> 과밀억제권역의 경우 54,240원 + 설립 공과금 <br/>* 과밀 -> 과밀은 정률<br/>* 과밀 -> 과밀은 정률 * IT업종 등 중과제외
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">관외이전</p>
+                      <p>이사 3인 이상</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>임대차계약서 사본(주소확인용)</li><li>이사 과반수 이상 개인인감, 인감증명서 1통</li><li>주식 합 1/3이상인 주주의 개인인감, 인감증명서 1통</li><li>주주명부 사본, 정관 사본</li><li>법인인감증명서 1통, 등기사항전부증명서 1통 (공증용)</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 정률 219,240원<br/>* 공증료 60,000원<br/>* 변경주소지 상호검색 필수<br/>* 비과밀 -> 과밀억제권역의 경우 54,240원 + 설립 공과금 <br/>* 과밀 -> 과밀은 정률<br/>* 과밀 -> 과밀은 정률 * IT업종 등 중과제외
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">지점설치/ 삭제</p>
+                      <p>이사 3인 이하</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>임대차계약서 사본(주소확인용)</li><li>정관 사본</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 정률 54,240원*3(중과) <br/>* 본점관할 외 설치 시 54,240원(정률) + 54,240원*3(중과) <br/>* 과밀억제권역 설치시 중과, 삭제는 정률
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">지점설치/ 삭제</p>
+                      <p>이사 3인 이상</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>임대차계약서 사본(주소확인용)</li><li>이사 과반수 이상 개인인감, 인감증명서 1통</li><li>정관 사본</li><li>법인인감증명서 1통, 등기사항전부증명서 1통 (공증용)</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 정률 54,240원*3(중과)<br/>* 공증료 30,000원<br/>* 본점관할 외 설치 시 54,240원(정률) + 54,240원*3(중과) <br/>* 과밀억제권역 설치시 중과, 삭제는 정률
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">지점이전</p>
+                      <p>이사 3인 이하</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>임대차계약서 사본(주소확인용)</li><li>정관 사본</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 정률 54,240원*3(중과) <br/>* 본점관할 외 이전 시 54,240원(정률) + 54,240원*3(중과) + 54,240원*3(중과) <br/>* 과밀억제권역으로 설치시 중과<br/>* 관할 겹치는 경우 54,240원 1건만 납부<br/>* 한번에 여러 지점 이전 시에도 동일
+                      </p>
+                    </div>
+                    <div class="col-lg-5 can-job p-3 m-3 shadow">      
+                      <p class="fs-5">지점이전</p>
+                      <p>이사 3인 이상</p>
+                      <ol class="pt-3 text-start">
+                        <li>법인인감도장</li><li>임대차계약서 사본(주소확인용)</li><li>이사 과반수 이상 개인인감, 인감증명서 1통</li><li>정관 사본</li><li>법인인감증명서 1통, 등기사항전부증명서 1통 (공증용)</li><li>등기소 방문자 신분증</li>
+                      </ol>
+                      <p class="pt-3 text-start">
+                        * 공과금 정률 54,240원*3(중과) <br/>* 본점관할 외 이전 시 54,240원(정률) + 54,240원*3(중과) + 54,240원*3(중과) <br/>* 과밀억제권역으로 설치시 중과<br/>* 관할 겹치는 경우 54,240원 1건만 납부<br/>* 한번에 여러 지점 이전 시에도 동일
+                      </p>
+                    </div>
+                </div>
+            </div>
+            <p class="p-3 fs-5">⭐ 대도시 법인 중과세에서 제외되는 업종은 어떤것들이 있나요?</p>
+            <p>은행업, 해외건설업 및 주택건설사업, 첨단기술산업 및 첨단업종, 유통산업, 의료업, 소프트웨어사업, 문화예술시설운영사업, 도시 및 주거환경정비법에 따라 설립된 조합이 시행하는 정비사업, 임대사업자가 경영하는 주택임대사업 등이 있습니다. (지방세법시행령 제26조 제1항)</p>
+            <p class="p-3 fs-5">⭐ '도소매업'만 있고 '통신판매업'이 없는 경우?</p>
+            <p>통신판매업은 도소매의 하위분류로 전자상거래, 그 아래분류의 통신판매업으로 되어 있으니 구체적으로 명기하는 의미가 아니라면 따로 정관변경을 하지 않으셔도 됩니다. </p>
+            <p class="p-3 fs-5">⭐ 대표자 퇴임일 때 초본 첨부?</p>
+            <p>상업등기 선례(제2-39호, 제1-140호) 임기만료 퇴임 등기 시 그자가 다시 대표로 취임하는 취임 등기를 동시에 신청하는 경우가 아닌 한, 주소 증명서면은 제출을 요하지 않는다. 과태료를 면하기 위해 퇴임 등기나 해임 등기의 편법을 활용하기도 한다.</p>
+        </div>
+    </div>
+    <%-include('footer.ejs') %>
+</body>
+</html>

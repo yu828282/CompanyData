@@ -279,7 +279,7 @@ img {
 
 }
 .can-job{
-  background-color: #F6F6F6;
+  background-color: #fff;
   border-radius : 20px;
   text-align: center;
   padding: 3% 0 ;
@@ -299,4 +299,104 @@ img {
 .contact-icon:hover{
   transform: translateY(-5px);
   transition: transform 0.2s ease-in-out;
+}
+
+/* 프로그레스 바 */
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  transition: all 200ms ease;
+  height: 220px;
+  padding: 80px 0;
+}
+.main-container .steps-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.main-container .steps-container .step {
+  z-index: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 200ms ease;
+  flex-grow: 0;
+  height: 17px;
+  width: 17px;
+  border: 4px solid #0d6efd;
+  border-radius: 50%;
+  background: #fff;
+}
+.main-container .steps-container .step.completed {
+  width: 18px;
+  height: 18px;
+  background: #0d6efd;
+  border: none;
+}
+.main-container .steps-container .step.completed svg {
+  transition: all 200ms ease;
+  display: block;
+  height: 10px;
+  width: 10px;
+  fill: white;
+}
+.main-container .steps-container .step.in-progress {
+  width: 18px;
+  height: 18px;
+  background: #0d6efd;
+  border: none;
+}
+.main-container .steps-container .step.in-progress .preloader {
+  display: block;
+  height: 10px;
+  width: 10px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  border-left-color: transparent;
+  animation-name: spin;
+  animation-duration: 2000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+.top-label{    
+  width: 65px;
+  text-align: center;
+  position: absolute;
+  padding-bottom: 40px;
+  z-index: 2000;
+  font-weight: 600;
+}
+.label{    
+  width: 55px;
+  margin: 0 auto;
+  text-align: center;
+}
+.main-container .steps-container .step .label {
+  position: absolute;
+  top: 30px;
+  z-index: 2000;
+  transition: all 200ms ease;
+  font-weight: 600;
+}
+.main-container .steps-container .line {
+  transition: all 200ms ease;
+  height: 2px;
+  flex-grow: 1;
+  max-width: 120px;
+  color: #0d6efd;
+}
+.main-container .steps-container .line.next-step-in-progress {
+  background: #0d6efd;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
