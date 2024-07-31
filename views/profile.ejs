@@ -112,7 +112,7 @@
                     <li class="page-item <%= currentPage > 1 ? '' : 'disabled' %> "><a class="page-link" href="/profile/1?term=<%= term %>&searchWord=<%= searchWord %>">처음</a></li>
                     <li class="page-item <%= currentPage > 1 ? '' : 'disabled' %> "><a class="page-link" href="/profile/<%= currentPage - 1 %>?term=<%= term %>&searchWord=<%= searchWord %>">&laquo;</a></li>
                 <% for (let i = startPage; i <= endPage; i++) { %>
-                    <li class="page-item <%= i === parseInt(currentPage) ? 'active' : '' %>""><a class="page-link" href="/profile/<%= i %>?term=<%= term %>&searchWord=<%= searchWord %>"><%= i %></a></li>
+                    <li class="page-item <%= i === parseInt(currentPage) ? 'actives' : '' %>""><a class="page-link" href="/profile/<%= i %>?term=<%= term %>&searchWord=<%= searchWord %>"><%= i %></a></li>
                 <% } %>
                     <li class="page-item <%= currentPage < totalPages ? '' : 'disabled' %>"><a class="page-link" href="/profile/<%= parseInt(currentPage) + 1 %>?term=<%= term %>&searchWord=<%= searchWord %>">&raquo;</a></li>
                     <li class="page-item <%= currentPage < totalPages ? '' : 'disabled' %>"><a class="page-link" href="/profile/<%= totalPages %>?term=<%= term %>&searchWord=<%= searchWord %>">끝</a></li>

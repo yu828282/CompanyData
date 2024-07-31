@@ -142,7 +142,7 @@
                   <li class="page-item <%= currentPage > 1 ? '' : 'disabled' %> "><a class="page-link" href="/detail/<%-id%>?currentPage=1">처음</a></li>
                   <li class="page-item <%= currentPage > 1 ? '' : 'disabled' %> "><a class="page-link" href="/detail/<%-id%>?currentPage=<%- (parseInt(currentPage) - 1) %>">&laquo;</a></li>
               <% for (let i = startPage; i <= endPage; i++) { %>
-                  <li class="page-item <%= i === parseInt(currentPage) ? 'active' : '' %>""><a class="page-link" href="/detail/<%-id%>?currentPage=<%= i %>"><%= i %></a></li>
+                  <li class="page-item <%= i === parseInt(currentPage) ? 'actives' : '' %>""><a class="page-link" href="/detail/<%-id%>?currentPage=<%= i %>"><%= i %></a></li>
               <% } %>
                   <li class="page-item <%= currentPage < totalPages ? '' : 'disabled' %>"><a class="page-link" href="/detail/<%-id%>?currentPage=<%- (parseInt(currentPage) + 1) %>">&raquo;</a></li>
                   <li class="page-item <%= currentPage < totalPages ? '' : 'disabled' %>"><a class="page-link" href="/detail/<%-id%>?currentPage=<%- parseInt(totalPages) %>">끝</a></li>

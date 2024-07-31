@@ -94,10 +94,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // app.engine('html', require('ejs').renderFile); // 엔진설정
 
 app.get('/', function (req,res) {
-  if (!req.session.user || req.session.user.userAccept === 0) {
-    res.render('info');
-    return;
-  }
+  // if (!req.session.user || req.session.user.userAccept === 0) {
+  //   res.render('info');
+  //   return;
+  // }
 
   let countTermEnd = 0;
 
