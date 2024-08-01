@@ -15,22 +15,22 @@
             <div>
               <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">설립등기</button>
+                  <button class="nav-link active main-text-color" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">설립등기</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="updatepeople-tab" data-bs-toggle="tab" data-bs-target="#updatepeople-tab-pane" type="button" role="tab" aria-controls="updatepeople-tab-pane" aria-selected="false">임원변경</button>
+                  <button class="nav-link main-text-color" id="updatepeople-tab" data-bs-toggle="tab" data-bs-target="#updatepeople-tab-pane" type="button" role="tab" aria-controls="updatepeople-tab-pane" aria-selected="false">임원변경</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="updateAddress-tab" data-bs-toggle="tab" data-bs-target="#updateAddress-tab-pane" type="button" role="tab" aria-controls="updateAddress-tab-pane" aria-selected="false">본점이전</button>
+                  <button class="nav-link main-text-color" id="updateAddress-tab" data-bs-toggle="tab" data-bs-target="#updateAddress-tab-pane" type="button" role="tab" aria-controls="updateAddress-tab-pane" aria-selected="false">본점이전</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="updateAddress2-tab" data-bs-toggle="tab" data-bs-target="#updateAddress2-tab-pane" type="button" role="tab" aria-controls="updateAddress2-tab-pane" aria-selected="false">지점변경</button>
+                  <button class="nav-link main-text-color" id="updateAddress2-tab" data-bs-toggle="tab" data-bs-target="#updateAddress2-tab-pane" type="button" role="tab" aria-controls="updateAddress2-tab-pane" aria-selected="false">지점변경</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="updatecapital-tab" data-bs-toggle="tab" data-bs-target="#updatecapital-tab-pane" type="button" role="tab" aria-controls="updatecapital-tab-pane" aria-selected="false">유상증자</button>
+                  <button class="nav-link main-text-color" id="updatecapital-tab" data-bs-toggle="tab" data-bs-target="#updatecapital-tab-pane" type="button" role="tab" aria-controls="updatecapital-tab-pane" aria-selected="false">유상증자</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="updateOthers-tab" data-bs-toggle="tab" data-bs-target="#updateOthers-tab-pane" type="button" role="tab" aria-controls="updateOthers-tab-pane" aria-selected="false">기타변경</button>
+                  <button class="nav-link main-text-color" id="updateOthers-tab" data-bs-toggle="tab" data-bs-target="#updateOthers-tab-pane" type="button" role="tab" aria-controls="updateOthers-tab-pane" aria-selected="false">기타변경</button>
                 </li>
               </ul>
               <!-- 탭 시작 -->
@@ -52,7 +52,7 @@
                         </div>
                       </div>
                       <hr class="my-4">
-                      <button class="w-100 btn btn-primary mb-3" onclick="calculate()">계산하기</button>
+                      <button class="w-100 btn main-button mb-3" onclick="calculate()">계산하기</button>
                     </div>
                     <div class="d-flex justify-content-center py-3">
                       <div class="p-3">
@@ -331,7 +331,7 @@
                         </div>
                       </div>
                       <hr class="my-4">
-                      <button class="w-100 btn btn-primary mb-3" onclick="calculate2()">계산하기</button>
+                      <button class="w-100 btn main-button mb-3" onclick="calculate2()">계산하기</button>
                     </div>
                     <div class="d-flex justify-content-center py-3">
                       <div class="p-3">
@@ -364,11 +364,11 @@
                     <h4 id="totalFee2">GMS서비스 : </h4>
                     <div> - 서류 제출 요청 시 대행료가 추가됩니다.</div>
                   </div>     
+                  <div class="col-lg-6 mx-auto"> 
+                    <h2 class="fw-bold text-center">유상 증자등기 안내문</h2>
+                    <p>* 모든 증명서는 3개월 내 발급분으로 준비<br/>* 정관에 따라 필요서류 변동 가능<br/>* 지점여부에 따라 공과금이 추가될 수 있습니다.</p>
+                  </div>                
                   <div class="row justify-content-center pt-3 mx-1-3"> 
-                    <div class="col-lg-6 mx-auto"> 
-                      <h2 class="fw-bold text-center">유상 증자등기 안내문</h2>
-                      <p>* 모든 증명서는 3개월 내 발급분으로 준비<br/>* 정관에 따라 필요서류 변동 가능<br/>* 지점여부에 따라 공과금이 추가될 수 있습니다.</p>
-                    </div>                
                       <div class="col-lg-5 can-job p-3 m-3 shadow">      
                         <p class="fs-5">유상증자</p>
                         <p>이사 3인 미만</p>
@@ -441,6 +441,8 @@
                     </div> 
                     <p class="pt-3 fs-5">⭐ '도소매업'만 있고 '통신판매업'이 없는 경우?</p>
                     <p>통신판매업은 도소매의 하위분류로 전자상거래, 그 아래분류의 통신판매업으로 되어 있으니 구체적으로 명기하는 의미가 아니라면 따로 정관변경을 하지 않으셔도 됩니다. </p>
+                    <p class="pt-3 fs-5">⭐ 증자하면서 발행할 주식의 총수도 함께 변경할 수 있나요?</p>
+                    <p>가능합니다. 유상증자와 동시에 발행할 주식의 총수 변경을 할 수 있으며, 이 때 발행할 주식의 총수에 대한 등록면허세는 감면됩니다.</p>
                 </div>
               </div>
               <!-- 탭 종료 -->

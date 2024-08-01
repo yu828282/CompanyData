@@ -150,6 +150,11 @@ app.get('/login', function (req,res) {
   }
 })
 
+app.get('/introduce', function (req,res) {
+  res.render('introduce')
+  }
+);
+
 app.post('/loginProc', (req, res) => {
   const id  = req.body.userId.trim(); 
   const pw = req.body.userPassword.trim(); 
